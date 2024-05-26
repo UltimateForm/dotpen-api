@@ -3,8 +3,8 @@ import { Injectable } from "@nestjs/common";
 import { createMap, forMember, mapFrom, type Mapper } from "@automapper/core";
 import {
   CharacterEntity,
-  CharacterRelationshipEntity,
-  GeneralCharacterRelationshipOutput,
+  CharacterRelationEntity,
+  GeneralCharacterRelationOutput,
 } from "src/neo4j";
 import {
   CharacterModel,
@@ -21,10 +21,10 @@ export class ResponseProfile extends AutomapperProfile {
   override get profile() {
     return (mapper) => {
       createMap(mapper, CharacterEntity, CharacterModel);
-      createMap(mapper, CharacterRelationshipEntity, CharacterRelationModel);
+      createMap(mapper, CharacterRelationEntity, CharacterRelationModel);
       createMap(
         mapper,
-        GeneralCharacterRelationshipOutput,
+        GeneralCharacterRelationOutput,
         CharacterRelationAggregateModel,
         forMember(
           (target) => target.characters,

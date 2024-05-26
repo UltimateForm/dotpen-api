@@ -1,7 +1,7 @@
 import { AutomapperProfile, InjectMapper } from "@automapper/nestjs";
 import { Injectable } from "@nestjs/common";
 import { createMap, forMember, mapFrom, type Mapper } from "@automapper/core";
-import { CharacterEntity, GeneralCharacterRelationshipInput } from "src/neo4j";
+import { CharacterEntity, GeneralCharacterRelationInput } from "src/neo4j";
 import {
   CharacterCreateArgs,
   CharacterPutRelationArgs,
@@ -21,7 +21,7 @@ export class RequestProfile extends AutomapperProfile {
       createMap(
         mapper,
         CharacterPutRelationArgs,
-        GeneralCharacterRelationshipInput,
+        GeneralCharacterRelationInput,
         forMember(
           (target) => target.idx,
           mapFrom((source) => source.ids[0]),

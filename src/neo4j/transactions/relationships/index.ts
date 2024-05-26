@@ -1,7 +1,5 @@
-import { createFriendship } from "./putFriendship";
-import { putRelationship } from "./putRelationship";
+import { putRelation } from "./putRelation";
 
 export const rlx = {
-  createFriendship,
-  putRelationship,
+  putRelation,
 };

@@ -2,11 +2,13 @@ import { Args, Mutation, Query, Resolver } from "@nestjs/graphql";
 import {
   CharacterModel,
   CharacterOperationModel,
-  CharacterRelationAggregateModel,
+  CharacterRelationOperationModel,
 } from "./models/response";
 import {
   CharacterCreateArgs,
   CharacterFindArgs,
+  // the below is being triggered for no reason
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
   CharacterPutRelationArgs,
   CharacterUpdateArgs,
   PaginationArgs,
@@ -24,34 +26,44 @@ export class CharactersResolver {
   ) {}
 
   @Query(() => CharacterModel)
-  getCharacterById(@Args() characterArgs: CharacterFindArgs) {
+  getCharacterById(
+    @Args() characterArgs: CharacterFindArgs,
+  ): Promise<CharacterModel> {
     return this.service.getCharacterById(characterArgs);
   }
 
   @Query(() => [CharacterModel])
-  getCharacters(@Args() paginationArgs: PaginationArgs) {
+  getCharacters(
+    @Args() paginationArgs: PaginationArgs,
+  ): Promise<CharacterModel[]> {
     return this.service.getCharacters(paginationArgs);
   }
 
   @Mutation(() => CharacterOperationModel)
-  createCharacter(@Args() characterCreateArgs: CharacterCreateArgs) {
+  createCharacter(
+    @Args() characterCreateArgs: CharacterCreateArgs,
+  ): Promise<CharacterOperationModel> {
     return this.service.createCharacter(characterCreateArgs);
   }
 
   @Mutation(() => CharacterOperationModel)
-  deleteCharacterById(@Args() characterFindArgs: CharacterFindArgs) {
+  deleteCharacterById(
+    @Args() characterFindArgs: CharacterFindArgs,
+  ): Promise<CharacterOperationModel> {
     return this.service.deleteCharacterById(characterFindArgs);
   }
 
   @Mutation(() => CharacterOperationModel)
-  updateCharacter(@Args() characterUpdateArgs: CharacterUpdateArgs) {
+  updateCharacter(
+    @Args() characterUpdateArgs: CharacterUpdateArgs,
+  ): Promise<CharacterOperationModel> {
     return this.service.updateCharacterById(characterUpdateArgs);
   }
 
-  @Mutation(() => CharacterRelationAggregateModel)
+  @Mutation(() => CharacterRelationOperationModel)
   putCharacterRelationship(
     @Args() CharacterPutRelationArgs: CharacterPutRelationArgs,
-  ) {
+  ): Promise<CharacterRelationOperationModel> {
     return this.service.putCharacterRelationship(CharacterPutRelationArgs);
   }
 }

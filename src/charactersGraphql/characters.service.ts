@@ -1,8 +1,8 @@
 import { Injectable } from "@nestjs/common";
 import {
   CharacterEntity,
-  GeneralCharacterRelationshipInput,
-  GeneralCharacterRelationshipOutput,
+  GeneralCharacterRelationInput,
+  GeneralCharacterRelationOutput,
   Neo4jService,
 } from "../neo4j";
 import {
@@ -16,6 +16,7 @@ import {
   CharacterModel,
   CharacterOperationModel,
   CharacterRelationAggregateModel,
+  CharacterRelationOperationModel,
 } from "./models/response";
 import { InjectPinoLogger, PinoLogger } from "nestjs-pino";
 import { Mapper } from "@automapper/core";
@@ -68,7 +69,9 @@ export class CharactersService {
     return result;
   }
 
-  async updateCharacterById(characterUpdateArgs: CharacterUpdateArgs) {
+  async updateCharacterById(
+    characterUpdateArgs: CharacterUpdateArgs,
+  ): Promise<CharacterOperationModel> {
     const operationResult = new CharacterOperationModel();
     try {
       const characterEntity = this.automapper.map(
@@ -105,20 +108,26 @@ export class CharactersService {
 
   async putCharacterRelationship(
     relation: CharacterPutRelationArgs,
-  ): Promise<CharacterRelationAggregateModel> {
-    const mappedInput = this.automapper.map(
-      relation,
-      CharacterPutRelationArgs,
-      GeneralCharacterRelationshipInput,
-    );
-    const dbResp = await this.db.putRelationship(mappedInput);
-    const mappedResponse = this.automapper.map(
-      dbResp,
-      GeneralCharacterRelationshipOutput,
-      CharacterRelationAggregateModel,
-    );
-    this.logger.assign({ mappedResponse });
-    this.logger.info("response mapped");
-    return mappedResponse;
+  ): Promise<CharacterRelationOperationModel> {
+    const operationModel = new CharacterRelationOperationModel();
+    try {
+      const mappedInput = this.automapper.map(
+        relation,
+        CharacterPutRelationArgs,
+        GeneralCharacterRelationInput,
+      );
+      const dbResp = await this.db.putRelation(mappedInput);
+      const mappedResponse = this.automapper.map(
+        dbResp,
+        GeneralCharacterRelationOutput,
+        CharacterRelationAggregateModel,
+      );
+      operationModel.success = true;
+      operationModel.characterRelation = mappedResponse;
+    } catch (error) {
+      this.logger.error(error);
+      operationModel.success = false;
+    }
+    return operationModel;
   }
 }

@@ -7,7 +7,7 @@ export function readCharacters(pagination: Pagination) {
     return tx.run<CharacterEntityOperator>(
       `MATCH (character:Character) 
       RETURN character
-			ORDER BY character.id
+			ORDER BY character.debut
 			SKIP $skip
 			LIMIT $limit`,
       { limit: int(pagination.limit), skip: int(pagination.skip) },

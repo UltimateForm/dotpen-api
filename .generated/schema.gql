@@ -37,10 +37,15 @@ enum CharacterRelationType {
   FRIENDSHIP
   ANIMOSITY
   KILLED
-  KINSHIIP
+  KINSHIP
   PEDAGOGY
   VASSALAGE
   WORSHIP
+}
+
+type CharacterRelationOperationModel {
+  success: Boolean!
+  characterRelation: CharacterRelationAggregateModel
 }
 
 type Query {
@@ -52,5 +57,5 @@ type Mutation {
   createCharacter(name: String!, description: String!, debut: Int!): CharacterOperationModel!
   deleteCharacterById(id: String!): CharacterOperationModel!
   updateCharacter(name: String!, description: String!, debut: Int!, id: String!): CharacterOperationModel!
-  putCharacterRelationship(ids: [String!]!, relation: CharacterRelationType!, spark: String, level: CharacterRelationLevel!): CharacterRelationAggregateModel!
+  putCharacterRelationship(ids: [String!]!, relation: CharacterRelationType!, spark: String, level: CharacterRelationLevel!): CharacterRelationOperationModel!
 }

@@ -2,8 +2,8 @@ import { Injectable, NotFoundException } from "@nestjs/common";
 import { Driver, Session } from "neo4j-driver";
 import {
   CharacterEntity,
-  GeneralCharacterRelationshipInput,
-  GeneralCharacterRelationshipOutput,
+  GeneralCharacterRelationInput,
+  GeneralCharacterRelationOutput,
   Pagination,
 } from "./models/data";
 import { ConfigService } from "@nestjs/config";
@@ -94,12 +94,12 @@ export class Neo4jService {
     });
   }
 
-  async putRelationship(
-    relationshipData: GeneralCharacterRelationshipInput,
-  ): Promise<GeneralCharacterRelationshipOutput> {
+  async putRelation(
+    relationshipData: GeneralCharacterRelationInput,
+  ): Promise<GeneralCharacterRelationOutput> {
     return this.#withSession(async (session) => {
       const write = await session.executeWrite(
-        rlx.putRelationship(relationshipData),
+        rlx.putRelation(relationshipData),
       );
       const record = write.records[0];
       const characterX = record.get("characterX").properties;
@@ -107,11 +107,11 @@ export class Neo4jService {
       const relationship = record.get("relationship").properties;
       this.logger.assign({ relationship });
       this.logger.info("GOT RELATIONSHIP");
-      const output: GeneralCharacterRelationshipOutput = {
+      const output: GeneralCharacterRelationOutput = {
         characterX,
         characterY,
-        relationship,
-        relationshipType: relationshipData.relation,
+        relation: relationship,
+        relationType: relationshipData.relation,
       };
       return output;
     });
