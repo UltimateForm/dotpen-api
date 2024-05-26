@@ -1,0 +1,56 @@
+# ------------------------------------------------------
+# THIS FILE WAS AUTOMATICALLY GENERATED (DO NOT MODIFY)
+# ------------------------------------------------------
+
+type CharacterModel {
+  id: String!
+  name: String!
+  description: String!
+  debut: Int!
+}
+
+type CharacterOperationModel {
+  success: Boolean!
+  character: CharacterModel
+}
+
+type CharacterRelationModel {
+  spark: String
+  level: CharacterRelationLevel!
+}
+
+enum CharacterRelationLevel {
+  TERMINATED
+  DEVOLVING
+  EVOLVING
+  ESTABLISHED
+  DEEP
+}
+
+type CharacterRelationAggregateModel {
+  characters: [CharacterModel!]!
+  relationType: CharacterRelationType!
+  relation: CharacterRelationModel!
+}
+
+enum CharacterRelationType {
+  FRIENDSHIP
+  ANIMOSITY
+  KILLED
+  KINSHIIP
+  PEDAGOGY
+  VASSALAGE
+  WORSHIP
+}
+
+type Query {
+  getCharacterById(id: String!): CharacterModel!
+  getCharacters(pageNo: Int!, pageSize: Int!): [CharacterModel!]!
+}
+
+type Mutation {
+  createCharacter(name: String!, description: String!, debut: Int!): CharacterOperationModel!
+  deleteCharacterById(id: String!): CharacterOperationModel!
+  updateCharacter(name: String!, description: String!, debut: Int!, id: String!): CharacterOperationModel!
+  putCharacterRelationship(ids: [String!]!, relation: CharacterRelationType!, spark: String, level: CharacterRelationLevel!): CharacterRelationAggregateModel!
+}
