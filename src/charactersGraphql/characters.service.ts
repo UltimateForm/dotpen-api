@@ -1,6 +1,7 @@
-import { Injectable } from "@nestjs/common";
+import { HttpException, Injectable } from "@nestjs/common";
 import {
   CharacterEntity,
+  CharacterRelationFindInput,
   GeneralCharacterRelationInput,
   GeneralCharacterRelationOutput,
   Neo4jService,
@@ -9,6 +10,7 @@ import {
   CharacterCreateArgs,
   CharacterFindArgs,
   CharacterPutRelationArgs,
+  CharacterRelationFindArgs,
   CharacterUpdateArgs,
   PaginationArgs,
 } from "./models/args";
@@ -49,6 +51,9 @@ export class CharactersService {
       operationResult.character = mappedCharacter;
       operationResult.success = true;
     } catch (error) {
+      if (error instanceof HttpException) {
+        throw error;
+      }
       console.error(error);
       operationResult.success = false;
     }
@@ -88,6 +93,9 @@ export class CharactersService {
       operationResult.success = true;
       operationResult.character = updatedModel;
     } catch (error) {
+      if (error instanceof HttpException) {
+        throw error;
+      }
       operationResult.success = false;
     }
 
@@ -106,7 +114,7 @@ export class CharactersService {
     return mappedCharacters;
   }
 
-  async putCharacterRelationship(
+  async putCharacterRelation(
     relation: CharacterPutRelationArgs,
   ): Promise<CharacterRelationOperationModel> {
     const operationModel = new CharacterRelationOperationModel();
@@ -125,6 +133,37 @@ export class CharactersService {
       operationModel.success = true;
       operationModel.characterRelation = mappedResponse;
     } catch (error) {
+      if (error instanceof HttpException) {
+        throw error;
+      }
+      this.logger.error(error);
+      operationModel.success = false;
+    }
+    return operationModel;
+  }
+
+  async deleteCharacterRelation(
+    args: CharacterRelationFindArgs,
+  ): Promise<CharacterRelationOperationModel> {
+    const operationModel = new CharacterRelationOperationModel();
+    try {
+      const mappedInput = this.automapper.map(
+        args,
+        CharacterRelationFindArgs,
+        CharacterRelationFindInput,
+      );
+      const dbResp = await this.db.deleteRelation(mappedInput);
+      const mappedResponse = this.automapper.map(
+        dbResp,
+        GeneralCharacterRelationOutput,
+        CharacterRelationAggregateModel,
+      );
+      operationModel.success = true;
+      operationModel.characterRelation = mappedResponse;
+    } catch (error) {
+      if (error instanceof HttpException) {
+        throw error;
+      }
       this.logger.error(error);
       operationModel.success = false;
     }

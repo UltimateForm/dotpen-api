@@ -13,6 +13,6 @@ export class CharacterRelationAggregateModel {
   @Field(() => CharacterRelationType)
   relationType: CharacterRelationType;
   @AutoMap()
-  @Field(() => CharacterRelationModel)
-  relation: CharacterRelationModel;
+  @Field(() => CharacterRelationModel, { nullable: true })
+  relation?: CharacterRelationModel;
 }

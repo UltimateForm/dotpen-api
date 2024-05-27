@@ -30,7 +30,7 @@ enum CharacterRelationLevel {
 type CharacterRelationAggregateModel {
   characters: [CharacterModel!]!
   relationType: CharacterRelationType!
-  relation: CharacterRelationModel!
+  relation: CharacterRelationModel
 }
 
 enum CharacterRelationType {
@@ -57,5 +57,6 @@ type Mutation {
   createCharacter(name: String!, description: String!, debut: Int!): CharacterOperationModel!
   deleteCharacterById(id: String!): CharacterOperationModel!
   updateCharacter(name: String!, description: String!, debut: Int!, id: String!): CharacterOperationModel!
-  putCharacterRelationship(ids: [String!]!, relation: CharacterRelationType!, spark: String, level: CharacterRelationLevel!): CharacterRelationOperationModel!
+  putCharacterRelation(ids: [String!]!, relation: CharacterRelationType!, spark: String, level: CharacterRelationLevel!): CharacterRelationOperationModel!
+  deleteCharacterRelation(ids: [String!]!, relation: CharacterRelationType!): CharacterRelationOperationModel!
 }

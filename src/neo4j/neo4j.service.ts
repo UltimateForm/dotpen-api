@@ -2,6 +2,7 @@ import { Injectable, NotFoundException } from "@nestjs/common";
 import { Driver, Session } from "neo4j-driver";
 import {
   CharacterEntity,
+  CharacterRelationFindInput,
   GeneralCharacterRelationInput,
   GeneralCharacterRelationOutput,
   Pagination,
@@ -105,13 +106,35 @@ export class Neo4jService {
       const characterX = record.get("characterX").properties;
       const characterY = record.get("characterY").properties;
       const relationship = record.get("relationship").properties;
-      this.logger.assign({ relationship });
-      this.logger.info("GOT RELATIONSHIP");
       const output: GeneralCharacterRelationOutput = {
         characterX,
         characterY,
         relation: relationship,
         relationType: relationshipData.relation,
+      };
+      return output;
+    });
+  }
+
+  async deleteRelation(
+    relationFindInput: CharacterRelationFindInput,
+  ): Promise<GeneralCharacterRelationOutput> {
+    return this.#withSession(async (session) => {
+      const write = await session.executeWrite(
+        rlx.deleteRelation(relationFindInput),
+      );
+      if (!write.summary.counters.containsUpdates()) {
+        throw new NotFoundException();
+      }
+      const record = write.records[0];
+      const characterX = record.get("characterX").properties;
+      const characterY = record.get("characterY").properties;
+      const relationship = record.get("relationship").properties;
+      const output: GeneralCharacterRelationOutput = {
+        characterX,
+        characterY,
+        relation: relationship,
+        relationType: relationFindInput.relation,
       };
       return output;
     });

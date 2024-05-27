@@ -10,6 +10,7 @@ import {
   // the below is being triggered for no reason
   // eslint-disable-next-line @typescript-eslint/no-unused-vars
   CharacterPutRelationArgs,
+  CharacterRelationFindArgs,
   CharacterUpdateArgs,
   PaginationArgs,
 } from "./models/args";
@@ -61,9 +62,16 @@ export class CharactersResolver {
   }
 
   @Mutation(() => CharacterRelationOperationModel)
-  putCharacterRelationship(
-    @Args() CharacterPutRelationArgs: CharacterPutRelationArgs,
+  putCharacterRelation(
+    @Args() characterPutRelationArgs: CharacterPutRelationArgs,
   ): Promise<CharacterRelationOperationModel> {
-    return this.service.putCharacterRelationship(CharacterPutRelationArgs);
+    return this.service.putCharacterRelation(characterPutRelationArgs);
+  }
+
+  @Mutation(() => CharacterRelationOperationModel)
+  deleteCharacterRelation(
+    @Args() characterRelationFindArgs: CharacterRelationFindArgs,
+  ): Promise<CharacterRelationOperationModel> {
+    return this.service.deleteCharacterRelation(characterRelationFindArgs);
   }
 }

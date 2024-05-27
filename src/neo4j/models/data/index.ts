@@ -5,5 +5,6 @@ export {
   GeneralCharacterRelationInput,
   CharacterRelationType,
   CharacterRelationEntity,
+  CharacterRelationFindInput,
 } from "./relationships";
 export { Pagination } from "./pagination";
