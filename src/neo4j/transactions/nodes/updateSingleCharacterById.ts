@@ -1,6 +1,6 @@
 import { ManagedTransaction } from "neo4j-driver";
 import { CharacterEntity } from "../../models/data/nodes/character.entity";
-import { CharacterEntityOperator } from "../../models/operators/operators";
+import { CharacterEntityOperator } from "../../models/operators";
 
 export function updateSingleCharacterById(character: CharacterEntity) {
   return (tx: ManagedTransaction) => {

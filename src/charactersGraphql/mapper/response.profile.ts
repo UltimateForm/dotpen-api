@@ -3,14 +3,16 @@ import { Injectable } from "@nestjs/common";
 import { createMap, forMember, mapFrom, type Mapper } from "@automapper/core";
 import {
   CharacterEntity,
-  CharacterRelationEntity,
-  GeneralCharacterRelationOutput,
+  RelationOutput,
+  RelationDataEntity,
+  CharacterRelationOutput,
 } from "src/neo4j";
 import {
   CharacterModel,
   CharacterRelationAggregateModel,
   CharacterRelationModel,
 } from "../models/response";
+import { CharacterRelationDataModel } from "../models/response/character-relation-data.model";
 
 @Injectable()
 export class ResponseProfile extends AutomapperProfile {
@@ -21,14 +23,18 @@ export class ResponseProfile extends AutomapperProfile {
   override get profile() {
     return (mapper) => {
       createMap(mapper, CharacterEntity, CharacterModel);
-      createMap(mapper, CharacterRelationEntity, CharacterRelationModel);
+      createMap(mapper, RelationDataEntity, CharacterRelationDataModel);
+      createMap(mapper, RelationOutput, CharacterRelationModel);
+
       createMap(
         mapper,
-        GeneralCharacterRelationOutput,
+        CharacterRelationOutput,
         CharacterRelationAggregateModel,
         forMember(
           (target) => target.characters,
-          mapFrom((source) => [source.characterX, source.characterY]),
+          mapFrom((source) =>
+            [source.characterX, source.characterY].filter(Boolean),
+          ),
         ),
       );
     };

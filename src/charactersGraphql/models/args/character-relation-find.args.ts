@@ -8,6 +8,6 @@ export class CharacterRelationFindArgs {
   @Field(() => [String])
   ids: [string, string];
   @AutoMap()
-  @Field(() => CharacterRelationType)
-  relation: CharacterRelationType;
+  @Field(() => CharacterRelationType, { nullable: true })
+  relation?: CharacterRelationType;
 }

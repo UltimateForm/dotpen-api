@@ -2,8 +2,8 @@ import { HttpException, Injectable } from "@nestjs/common";
 import {
   CharacterEntity,
   CharacterRelationFindInput,
-  GeneralCharacterRelationInput,
-  GeneralCharacterRelationOutput,
+  CharacterRelationInput,
+  CharacterRelationOutput,
   Neo4jService,
 } from "../neo4j";
 import {
@@ -122,12 +122,12 @@ export class CharactersService {
       const mappedInput = this.automapper.map(
         relation,
         CharacterPutRelationArgs,
-        GeneralCharacterRelationInput,
+        CharacterRelationInput,
       );
       const dbResp = await this.db.putRelation(mappedInput);
       const mappedResponse = this.automapper.map(
         dbResp,
-        GeneralCharacterRelationOutput,
+        CharacterRelationOutput,
         CharacterRelationAggregateModel,
       );
       operationModel.success = true;
@@ -152,14 +152,36 @@ export class CharactersService {
         CharacterRelationFindArgs,
         CharacterRelationFindInput,
       );
-      const dbResp = await this.db.deleteRelation(mappedInput);
-      const mappedResponse = this.automapper.map(
-        dbResp,
-        GeneralCharacterRelationOutput,
+      await this.db.deleteRelation(mappedInput);
+      operationModel.success = true;
+    } catch (error) {
+      if (error instanceof HttpException) {
+        throw error;
+      }
+      this.logger.error(error);
+      operationModel.success = false;
+    }
+    return operationModel;
+  }
+
+  async getRelationBetweenCharacters(
+    args: CharacterRelationFindArgs,
+  ): Promise<CharacterRelationOperationModel> {
+    const operationModel = new CharacterRelationOperationModel();
+    try {
+      const mappedInput = this.automapper.map(
+        args,
+        CharacterRelationFindArgs,
+        CharacterRelationFindInput,
+      );
+      const output = await this.db.readRelationBetweenCharacters(mappedInput);
+      const aggregateModel = this.automapper.map(
+        output,
+        CharacterRelationOutput,
         CharacterRelationAggregateModel,
       );
+      operationModel.characterRelation = aggregateModel;
       operationModel.success = true;
-      operationModel.characterRelation = mappedResponse;
     } catch (error) {
       if (error instanceof HttpException) {
         throw error;

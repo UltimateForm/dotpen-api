@@ -4,7 +4,7 @@ import { createMap, forMember, mapFrom, type Mapper } from "@automapper/core";
 import {
   CharacterEntity,
   CharacterRelationFindInput,
-  GeneralCharacterRelationInput,
+  CharacterRelationInput,
 } from "src/neo4j";
 import {
   CharacterCreateArgs,
@@ -26,7 +26,7 @@ export class RequestProfile extends AutomapperProfile {
       createMap(
         mapper,
         CharacterPutRelationArgs,
-        GeneralCharacterRelationInput,
+        CharacterRelationInput,
         forMember(
           (target) => target.idx,
           mapFrom((source) => source.ids[0]),

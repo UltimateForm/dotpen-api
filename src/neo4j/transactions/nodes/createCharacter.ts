@@ -1,5 +1,5 @@
 import { ManagedTransaction } from "neo4j-driver";
-import { CharacterEntityOperator } from "../../models/operators/operators";
+import { CharacterEntityOperator } from "../../models/operators";
 import { CharacterEntity } from "../../models/data/nodes/character.entity";
 
 export function createCharacter(character: CharacterEntity) {

@@ -1,5 +1,5 @@
 import { ManagedTransaction } from "neo4j-driver";
-import { CharacterEntityOperator } from "../../models/operators/operators";
+import { CharacterEntityOperator } from "../../models/operators";
 
 export function readSingleCharacterById(id: string) {
   return (tx: ManagedTransaction) => {

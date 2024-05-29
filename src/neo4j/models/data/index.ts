@@ -1,10 +1,11 @@
 export { CharacterEntity } from "./nodes";
 export {
   CharacterRelationLevel,
-  GeneralCharacterRelationOutput,
-  GeneralCharacterRelationInput,
+  CharacterRelationOutput,
+  CharacterRelationInput,
   CharacterRelationType,
-  CharacterRelationEntity,
+  RelationDataEntity,
   CharacterRelationFindInput,
+  RelationOutput,
 } from "./relationships";
 export { Pagination } from "./pagination";

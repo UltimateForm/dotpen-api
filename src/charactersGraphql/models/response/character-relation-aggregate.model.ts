@@ -1,6 +1,5 @@
 import { Field, ObjectType } from "@nestjs/graphql";
 import { CharacterModel } from "./character.model";
-import { CharacterRelationType } from "../character-relation-type";
 import { AutoMap } from "@automapper/classes";
 import { CharacterRelationModel } from "./character-relation.model";
 
@@ -9,10 +8,7 @@ export class CharacterRelationAggregateModel {
   @AutoMap()
   @Field(() => [CharacterModel])
   characters: [CharacterModel, CharacterModel];
-  @AutoMap()
-  @Field(() => CharacterRelationType)
-  relationType: CharacterRelationType;
-  @AutoMap()
-  @Field(() => CharacterRelationModel, { nullable: true })
-  relation?: CharacterRelationModel;
+  @AutoMap(() => [CharacterRelationModel])
+  @Field(() => [CharacterRelationModel])
+  relation: CharacterRelationModel[];
 }

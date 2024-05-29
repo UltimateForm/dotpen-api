@@ -74,4 +74,11 @@ export class CharactersResolver {
   ): Promise<CharacterRelationOperationModel> {
     return this.service.deleteCharacterRelation(characterRelationFindArgs);
   }
+
+  @Query(() => CharacterRelationOperationModel)
+  getRelationBetweenCharacters(
+    @Args() findArgs: CharacterRelationFindArgs,
+  ): Promise<CharacterRelationOperationModel> {
+    return this.service.getRelationBetweenCharacters(findArgs);
+  }
 }

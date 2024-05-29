@@ -2,9 +2,11 @@ import { Injectable, NotFoundException } from "@nestjs/common";
 import { Driver, Session } from "neo4j-driver";
 import {
   CharacterEntity,
+  RelationOutput,
   CharacterRelationFindInput,
-  GeneralCharacterRelationInput,
-  GeneralCharacterRelationOutput,
+  CharacterRelationInput,
+  CharacterRelationOutput,
+  CharacterRelationType,
   Pagination,
 } from "./models/data";
 import { ConfigService } from "@nestjs/config";
@@ -96,8 +98,8 @@ export class Neo4jService {
   }
 
   async putRelation(
-    relationshipData: GeneralCharacterRelationInput,
-  ): Promise<GeneralCharacterRelationOutput> {
+    relationshipData: CharacterRelationInput,
+  ): Promise<CharacterRelationOutput> {
     return this.#withSession(async (session) => {
       const write = await session.executeWrite(
         rlx.putRelation(relationshipData),
@@ -106,11 +108,15 @@ export class Neo4jService {
       const characterX = record.get("characterX").properties;
       const characterY = record.get("characterY").properties;
       const relationship = record.get("relationship").properties;
-      const output: GeneralCharacterRelationOutput = {
+      const output: CharacterRelationOutput = {
         characterX,
         characterY,
-        relation: relationship,
-        relationType: relationshipData.relation,
+        relation: [
+          {
+            type: relationshipData.relation,
+            data: relationship,
+          },
+        ],
       };
       return output;
     });
@@ -118,7 +124,7 @@ export class Neo4jService {
 
   async deleteRelation(
     relationFindInput: CharacterRelationFindInput,
-  ): Promise<GeneralCharacterRelationOutput> {
+  ): Promise<void> {
     return this.#withSession(async (session) => {
       const write = await session.executeWrite(
         rlx.deleteRelation(relationFindInput),
@@ -126,16 +132,34 @@ export class Neo4jService {
       if (!write.summary.counters.containsUpdates()) {
         throw new NotFoundException();
       }
-      const record = write.records[0];
+    });
+  }
+
+  async readRelationBetweenCharacters(
+    input: CharacterRelationFindInput,
+  ): Promise<CharacterRelationOutput> {
+    return this.#withSession(async (session) => {
+      const read = await session.executeRead(
+        rlx.readRelationBetweenCharacters(input),
+      );
+      if (!read.records.length) {
+        throw new NotFoundException();
+      }
+      const record = read.records[0];
       const characterX = record.get("characterX").properties;
-      const characterY = record.get("characterY").properties;
-      const relationship = record.get("relationship").properties;
-      const output: GeneralCharacterRelationOutput = {
-        characterX,
-        characterY,
-        relation: relationship,
-        relationType: relationFindInput.relation,
-      };
+      const characterY = record.get("characterY")?.properties;
+      const relationships = read.records
+        .map((rel) => rel.get("relationship"))
+        .filter(Boolean);
+      const output = new CharacterRelationOutput();
+      output.relation = relationships.map((rel) => {
+        const relData = new RelationOutput();
+        relData.type = rel.type as CharacterRelationType;
+        relData.data = rel.properties;
+        return relData;
+      });
+      output.characterX = characterX;
+      output.characterY = characterY;
       return output;
     });
   }

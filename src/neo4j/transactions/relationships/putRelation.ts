@@ -1,9 +1,9 @@
 import { ManagedTransaction, int } from "neo4j-driver";
-import { CharacterRelationshipOperator } from "../../models/operators/operators";
-import { GeneralCharacterRelationInput } from "../../models/data";
+import { CharacterRelationshipOperator } from "../../models/operators";
+import { CharacterRelationInput } from "../../models/data";
 import { enforceRelationshipType } from "./common";
 
-export function putRelation(relationship: GeneralCharacterRelationInput) {
+export function putRelation(relationship: CharacterRelationInput) {
   enforceRelationshipType(relationship.relation);
   return (tx: ManagedTransaction) => {
     return tx.run<CharacterRelationshipOperator>(

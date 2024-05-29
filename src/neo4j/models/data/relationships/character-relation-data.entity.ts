@@ -1,6 +1,6 @@
 import { AutoMap } from "@automapper/classes";
 
-export class CharacterRelationEntity {
+export class RelationDataEntity {
   @AutoMap()
   spark?: string;
   @AutoMap()
