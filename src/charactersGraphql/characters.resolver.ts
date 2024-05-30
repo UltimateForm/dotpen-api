@@ -2,6 +2,7 @@ import { Args, Mutation, Query, Resolver } from "@nestjs/graphql";
 import {
   CharacterModel,
   CharacterOperationModel,
+  CharacterRelationModel,
   CharacterRelationOperationModel,
 } from "./models/response";
 import {
@@ -75,10 +76,10 @@ export class CharactersResolver {
     return this.service.deleteCharacterRelation(characterRelationFindArgs);
   }
 
-  @Query(() => CharacterRelationOperationModel)
+  @Query(() => CharacterRelationModel)
   getRelationBetweenCharacters(
     @Args() findArgs: CharacterRelationFindArgs,
-  ): Promise<CharacterRelationOperationModel> {
+  ): Promise<CharacterRelationModel> {
     return this.service.getRelationBetweenCharacters(findArgs);
   }
 }

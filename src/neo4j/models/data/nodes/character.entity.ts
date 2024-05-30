@@ -1,6 +1,7 @@
 import { AutoMap } from "@automapper/classes";
+import { Integer } from "neo4j-driver";
 
-export class CharacterEntity {
+export class CharacterEntity extends Integer {
   @AutoMap()
   id: string | null = null;
   @AutoMap()

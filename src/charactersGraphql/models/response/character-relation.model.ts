@@ -1,14 +1,17 @@
 import { Field, ObjectType } from "@nestjs/graphql";
+import { CharacterModel } from "./character.model";
 import { AutoMap } from "@automapper/classes";
-import { CharacterRelationDataModel } from "./character-relation-data.model";
-import { CharacterRelationType } from "../character-relation-type";
+import { RelationModel } from "./relation.model";
 
 @ObjectType()
 export class CharacterRelationModel {
-  @AutoMap()
-  @Field(() => CharacterRelationType)
-  type: CharacterRelationType;
-  @AutoMap()
-  @Field(() => CharacterRelationDataModel)
-  data: CharacterRelationDataModel;
+  @AutoMap(() => CharacterModel)
+  @Field(() => CharacterModel)
+  start: CharacterModel;
+  @AutoMap(() => CharacterModel)
+  @Field(() => CharacterModel)
+  end: CharacterModel;
+  @AutoMap(() => [RelationModel])
+  @Field(() => [RelationModel])
+  relations: RelationModel[];
 }

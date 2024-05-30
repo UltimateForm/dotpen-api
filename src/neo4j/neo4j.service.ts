@@ -1,13 +1,18 @@
-import { Injectable, NotFoundException } from "@nestjs/common";
+import {
+  Injectable,
+  NotFoundException,
+  NotImplementedException,
+} from "@nestjs/common";
 import { Driver, Session } from "neo4j-driver";
 import {
   CharacterEntity,
-  RelationOutput,
+  RelationEntity,
   CharacterRelationFindInput,
   CharacterRelationInput,
-  CharacterRelationOutput,
+  CharacterRelationEntity,
   CharacterRelationType,
   Pagination,
+  RelationDataEntity,
 } from "./models/data";
 import { ConfigService } from "@nestjs/config";
 import { generate as generateId } from "short-uuid";
@@ -99,26 +104,27 @@ export class Neo4jService {
 
   async putRelation(
     relationshipData: CharacterRelationInput,
-  ): Promise<CharacterRelationOutput> {
+  ): Promise<CharacterRelationEntity> {
     return this.#withSession(async (session) => {
       const write = await session.executeWrite(
         rlx.putRelation(relationshipData),
       );
-      const record = write.records[0];
-      const characterX = record.get("characterX").properties;
-      const characterY = record.get("characterY").properties;
-      const relationship = record.get("relationship").properties;
-      const output: CharacterRelationOutput = {
-        characterX,
-        characterY,
-        relation: [
-          {
-            type: relationshipData.relation,
-            data: relationship,
-          },
-        ],
-      };
-      return output;
+      throw new NotImplementedException();
+      // const record = write.records[0];
+      // const characterX = record.get("characterX").properties;
+      // const characterY = record.get("characterY").properties;
+      // const relationship = record.get("relationship").properties;
+      // const output: CharacterRelationEntity = {
+      //   characterX,
+      //   characterY,
+      //   relation: [
+      //     {
+      //       type: relationshipData.relation,
+      //       data: relationship,
+      //     },
+      //   ],
+      // };
+      // return output;
     });
   }
 
@@ -137,7 +143,7 @@ export class Neo4jService {
 
   async readRelationBetweenCharacters(
     input: CharacterRelationFindInput,
-  ): Promise<CharacterRelationOutput> {
+  ): Promise<CharacterRelationEntity> {
     return this.#withSession(async (session) => {
       const read = await session.executeRead(
         rlx.readRelationBetweenCharacters(input),
@@ -145,22 +151,35 @@ export class Neo4jService {
       if (!read.records.length) {
         throw new NotFoundException();
       }
-      const record = read.records[0];
-      const characterX = record.get("characterX").properties;
-      const characterY = record.get("characterY")?.properties;
-      const relationships = read.records
-        .map((rel) => rel.get("relationship"))
+      const segments = read.records
+        .flatMap((rec) => rec.get("relation")?.segments)
         .filter(Boolean);
-      const output = new CharacterRelationOutput();
-      output.relation = relationships.map((rel) => {
-        const relData = new RelationOutput();
-        relData.type = rel.type as CharacterRelationType;
-        relData.data = rel.properties;
-        return relData;
+      const firstSegment = segments[0];
+      const entity = new CharacterRelationEntity();
+      entity.start = firstSegment.start.properties as CharacterEntity;
+      entity.end = firstSegment.end.properties as CharacterEntity;
+      entity.relations = segments.map((seg) => {
+        const relation = new RelationEntity();
+        relation.type = seg.relationship.type as CharacterRelationType;
+        relation.data = seg.relationship.properties as RelationDataEntity;
+        return relation;
       });
-      output.characterX = characterX;
-      output.characterY = characterY;
-      return output;
+      return entity;
+      // const characterX = record.get("characterX").properties;
+      // const characterY = record.get("characterY")?.properties;
+      // const relationships = read.records
+      //   .map((rel) => rel.get("relationship"))
+      //   .filter(Boolean);
+      // const output = new CharacterRelationEntity();
+      // output.relation = relationships.map((rel) => {
+      //   const relData = new RelationEntity();
+      //   relData.type = rel.type as CharacterRelationType;
+      //   relData.data = rel.properties;
+      //   return relData;
+      // });
+      // output.characterX = characterX;
+      // output.characterY = characterY;
+      // return output;
     });
   }
 }

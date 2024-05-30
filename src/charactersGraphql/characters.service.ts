@@ -3,7 +3,7 @@ import {
   CharacterEntity,
   CharacterRelationFindInput,
   CharacterRelationInput,
-  CharacterRelationOutput,
+  CharacterRelationEntity,
   Neo4jService,
 } from "../neo4j";
 import {
@@ -17,7 +17,7 @@ import {
 import {
   CharacterModel,
   CharacterOperationModel,
-  CharacterRelationAggregateModel,
+  CharacterRelationModel,
   CharacterRelationOperationModel,
 } from "./models/response";
 import { InjectPinoLogger, PinoLogger } from "nestjs-pino";
@@ -127,8 +127,8 @@ export class CharactersService {
       const dbResp = await this.db.putRelation(mappedInput);
       const mappedResponse = this.automapper.map(
         dbResp,
-        CharacterRelationOutput,
-        CharacterRelationAggregateModel,
+        CharacterRelationEntity,
+        CharacterRelationModel,
       );
       operationModel.success = true;
       operationModel.characterRelation = mappedResponse;
@@ -166,29 +166,18 @@ export class CharactersService {
 
   async getRelationBetweenCharacters(
     args: CharacterRelationFindArgs,
-  ): Promise<CharacterRelationOperationModel> {
-    const operationModel = new CharacterRelationOperationModel();
-    try {
-      const mappedInput = this.automapper.map(
-        args,
-        CharacterRelationFindArgs,
-        CharacterRelationFindInput,
-      );
-      const output = await this.db.readRelationBetweenCharacters(mappedInput);
-      const aggregateModel = this.automapper.map(
-        output,
-        CharacterRelationOutput,
-        CharacterRelationAggregateModel,
-      );
-      operationModel.characterRelation = aggregateModel;
-      operationModel.success = true;
-    } catch (error) {
-      if (error instanceof HttpException) {
-        throw error;
-      }
-      this.logger.error(error);
-      operationModel.success = false;
-    }
-    return operationModel;
+  ): Promise<CharacterRelationModel> {
+    const mappedInput = this.automapper.map(
+      args,
+      CharacterRelationFindArgs,
+      CharacterRelationFindInput,
+    );
+    const output = await this.db.readRelationBetweenCharacters(mappedInput);
+    const aggregateModel = this.automapper.map(
+      output,
+      CharacterRelationEntity,
+      CharacterRelationModel,
+    );
+    return aggregateModel;
   }
 }

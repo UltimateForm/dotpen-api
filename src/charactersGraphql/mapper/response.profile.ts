@@ -3,16 +3,16 @@ import { Injectable } from "@nestjs/common";
 import { createMap, forMember, mapFrom, type Mapper } from "@automapper/core";
 import {
   CharacterEntity,
-  RelationOutput,
+  RelationEntity,
   RelationDataEntity,
-  CharacterRelationOutput,
+  CharacterRelationEntity,
 } from "src/neo4j";
 import {
   CharacterModel,
-  CharacterRelationAggregateModel,
   CharacterRelationModel,
+  RelationModel,
 } from "../models/response";
-import { CharacterRelationDataModel } from "../models/response/character-relation-data.model";
+import { RelationDataModel } from "../models/response/relation-data.model";
 
 @Injectable()
 export class ResponseProfile extends AutomapperProfile {
@@ -23,19 +23,25 @@ export class ResponseProfile extends AutomapperProfile {
   override get profile() {
     return (mapper) => {
       createMap(mapper, CharacterEntity, CharacterModel);
-      createMap(mapper, RelationDataEntity, CharacterRelationDataModel);
-      createMap(mapper, RelationOutput, CharacterRelationModel);
+      createMap(mapper, RelationDataEntity, RelationDataModel);
+      createMap(mapper, RelationEntity, RelationModel);
 
       createMap(
         mapper,
-        CharacterRelationOutput,
-        CharacterRelationAggregateModel,
+        CharacterRelationEntity,
+        CharacterRelationModel,
         forMember(
-          (target) => target.characters,
-          mapFrom((source) =>
-            [source.characterX, source.characterY].filter(Boolean),
-          ),
+          (target) => target.start,
+          mapFrom((source) => source.start),
         ),
+        forMember(
+          (target) => target.end,
+          mapFrom((source) => source.end),
+        ),
+        // forMember(
+        //   (target) => target.relation,
+        //   mapFrom((source) => source.relation),
+        // ),
       );
     };
   }

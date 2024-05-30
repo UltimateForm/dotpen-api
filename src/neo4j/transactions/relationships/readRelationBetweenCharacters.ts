@@ -12,12 +12,8 @@ export function readRelationBetweenCharacters(
     : "";
   return (tx: ManagedTransaction) => {
     return tx.run<CharacterRelationshipOperator>(
-      `MATCH (characterX:Character {id: $idx})
-			WITH characterX
-			OPTIONAL MATCH (characterY:Character {id: $idy})
-			WITH characterX,characterY
-			OPTIONAL MATCH (characterX)-[relationship${relationPart}]-(characterY)
-			RETURN characterX,relationship,characterY
+      `MATCH relation=(characterX:Character {id: $idx})-[${relationPart}]-(characterY:Character {id: $idy})
+			RETURN relation
 			LIMIT 64`,
       {
         idx: relationInput.idx,

@@ -14,7 +14,7 @@ type CharacterOperationModel {
   character: CharacterModel
 }
 
-type CharacterRelationDataModel {
+type RelationDataModel {
   spark: String
   level: CharacterRelationLevel!
 }
@@ -27,9 +27,9 @@ enum CharacterRelationLevel {
   DEEP
 }
 
-type CharacterRelationModel {
+type RelationModel {
   type: CharacterRelationType!
-  data: CharacterRelationDataModel!
+  data: RelationDataModel!
 }
 
 enum CharacterRelationType {
@@ -42,20 +42,21 @@ enum CharacterRelationType {
   WORSHIP
 }
 
-type CharacterRelationAggregateModel {
-  characters: [CharacterModel!]!
-  relation: [CharacterRelationModel!]!
+type CharacterRelationModel {
+  start: CharacterModel!
+  end: CharacterModel!
+  relations: [RelationModel!]!
 }
 
 type CharacterRelationOperationModel {
   success: Boolean!
-  characterRelation: CharacterRelationAggregateModel
+  characterRelation: CharacterRelationModel
 }
 
 type Query {
   getCharacterById(id: String!): CharacterModel!
   getCharacters(pageNo: Int!, pageSize: Int!): [CharacterModel!]!
-  getRelationBetweenCharacters(ids: [String!]!, relation: CharacterRelationType): CharacterRelationOperationModel!
+  getRelationBetweenCharacters(ids: [String!]!, relation: CharacterRelationType): CharacterRelationModel!
 }
 
 type Mutation {
