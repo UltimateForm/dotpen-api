@@ -11,7 +11,7 @@ export class CharacterRelationModel {
   @AutoMap(() => CharacterModel)
   @Field(() => CharacterModel)
   end: CharacterModel;
-  @AutoMap(() => [RelationModel])
-  @Field(() => [RelationModel])
-  relations: RelationModel[];
+  @AutoMap(() => RelationModel)
+  @Field(() => RelationModel)
+  relation: RelationModel;
 }

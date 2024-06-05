@@ -19,6 +19,7 @@ import {
   CharacterOperationModel,
   CharacterRelationModel,
   CharacterRelationOperationModel,
+  CharacterRelationsResponseModel,
 } from "./models/response";
 import { InjectPinoLogger, PinoLogger } from "nestjs-pino";
 import { Mapper } from "@automapper/core";
@@ -166,18 +167,22 @@ export class CharactersService {
 
   async getRelationBetweenCharacters(
     args: CharacterRelationFindArgs,
-  ): Promise<CharacterRelationModel> {
+  ): Promise<CharacterRelationsResponseModel> {
     const mappedInput = this.automapper.map(
       args,
       CharacterRelationFindArgs,
       CharacterRelationFindInput,
     );
     const output = await this.db.readRelationBetweenCharacters(mappedInput);
-    const aggregateModel = this.automapper.map(
+    this.logger.assign({ output });
+    const aggregateModel = this.automapper.mapArray(
       output,
       CharacterRelationEntity,
       CharacterRelationModel,
     );
-    return aggregateModel;
+    const responseModel = new CharacterRelationsResponseModel();
+    responseModel.count = aggregateModel.length;
+    responseModel.relations = aggregateModel;
+    return responseModel;
   }
 }

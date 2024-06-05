@@ -7,6 +7,6 @@ export class CharacterRelationEntity {
   start: CharacterEntity;
   @AutoMap(() => CharacterEntity)
   end?: CharacterEntity;
-  @AutoMap(() => [RelationEntity])
-  relations?: RelationEntity[];
+  @AutoMap(() => RelationEntity)
+  relation: RelationEntity;
 }

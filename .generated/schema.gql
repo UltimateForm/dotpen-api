@@ -45,7 +45,7 @@ enum CharacterRelationType {
 type CharacterRelationModel {
   start: CharacterModel!
   end: CharacterModel!
-  relations: [RelationModel!]!
+  relation: RelationModel!
 }
 
 type CharacterRelationOperationModel {
@@ -53,10 +53,15 @@ type CharacterRelationOperationModel {
   characterRelation: CharacterRelationModel
 }
 
+type CharacterRelationsResponseModel {
+  relations: [CharacterRelationModel!]!
+  count: Int!
+}
+
 type Query {
   getCharacterById(id: String!): CharacterModel!
   getCharacters(pageNo: Int!, pageSize: Int!): [CharacterModel!]!
-  getRelationBetweenCharacters(ids: [String!]!, relation: CharacterRelationType): CharacterRelationModel!
+  getRelationBetweenCharacters(ids: [String!]!, relation: CharacterRelationType): CharacterRelationsResponseModel!
 }
 
 type Mutation {
