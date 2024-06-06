@@ -9,6 +9,8 @@ export interface CharacterEntityOperator {
 export type TRelationship = Path<CharacterEntity>;
 export interface CharacterRelationshipOperator {
   relation: TRelationship;
+  endNode: TCharacterNode;
+  startNode: TCharacterNode;
 }
 
 export interface RelationshipOperator {

@@ -11,9 +11,9 @@ export function putRelation(relationship: CharacterRelationInput) {
       WITH characterX
       MATCH (characterY:Character {id:$idy})
       WITH characterX,characterY
-      MERGE relation=(characterX)-[relationData:${relationship.relation}]->(characterY)
-      SET relationData += $relMap
-      RETURN relation`,
+      MERGE relation=(characterX)-[rel:${relationship.relation}]->(characterY)
+      SET rel += $relMap
+      RETURN relation, startNode(rel) as startNode, endNode(rel) as endNode`,
       {
         idx: relationship.idx,
         idy: relationship.idy,

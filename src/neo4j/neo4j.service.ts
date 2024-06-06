@@ -108,14 +108,19 @@ export class Neo4jService {
       if (!write.records.length) {
         throw new NotFoundException();
       }
-      const segment = write.records[0].get("relation").segments[0];
+      const record = write.records[0];
       const entity = new CharacterRelationEntity();
-      entity.start = segment.start.properties as CharacterEntity;
-      entity.end = segment.end.properties as CharacterEntity;
       const relation = new RelationEntity();
-      relation.type = segment.relationship.type as CharacterRelationType;
-      relation.data = segment.relationship.properties as RelationDataEntity;
+      const relationSegment = record.get("relation").segments[0];
+      const startNode = record.get("startNode");
+      const endNode = record.get("endNode");
+      relation.type = relationSegment.relationship
+        .type as CharacterRelationType;
+      relation.data = relationSegment.relationship
+        .properties as RelationDataEntity;
       entity.relation = relation;
+      entity.start = startNode.properties as CharacterEntity;
+      entity.end = endNode.properties as CharacterEntity;
       return entity;
     });
   }
@@ -143,17 +148,19 @@ export class Neo4jService {
       if (!read.records.length) {
         throw new NotFoundException();
       }
-      const segments = read.records
-        .flatMap((rec) => rec.get("relation")?.segments)
-        .filter(Boolean);
-      return segments.map((seg) => {
+      return read.records.map((rec) => {
         const entity = new CharacterRelationEntity();
-        entity.start = seg.start.properties as CharacterEntity;
-        entity.end = seg.end.properties as CharacterEntity;
         const relation = new RelationEntity();
-        relation.type = seg.relationship.type as CharacterRelationType;
-        relation.data = seg.relationship.properties as RelationDataEntity;
+        const relationSegment = rec.get("relation").segments[0];
+        const startNode = rec.get("startNode");
+        const endNode = rec.get("endNode");
+        relation.type = relationSegment.relationship
+          .type as CharacterRelationType;
+        relation.data = relationSegment.relationship
+          .properties as RelationDataEntity;
         entity.relation = relation;
+        entity.start = startNode.properties as CharacterEntity;
+        entity.end = endNode.properties as CharacterEntity;
         return entity;
       });
     });

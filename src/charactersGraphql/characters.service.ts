@@ -181,7 +181,7 @@ export class CharactersService {
       CharacterRelationModel,
     );
     const responseModel = new CharacterRelationsResponseModel();
-    responseModel.count = aggregateModel.length;
+    responseModel.pageSize = aggregateModel.length;
     responseModel.relations = aggregateModel;
     return responseModel;
   }

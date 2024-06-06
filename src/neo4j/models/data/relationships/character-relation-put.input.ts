@@ -1,7 +1,7 @@
 import { AutoMap } from "@automapper/classes";
 import { CharacterRelationType } from "./character-relation-type";
 
-export class CharacterRelationInput {
+export class CharacterRelationPutInput {
   @AutoMap()
   idx: string;
   @AutoMap()

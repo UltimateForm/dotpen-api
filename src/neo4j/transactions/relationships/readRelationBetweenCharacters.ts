@@ -12,8 +12,8 @@ export function readRelationBetweenCharacters(
     : "";
   return (tx: ManagedTransaction) => {
     return tx.run<CharacterRelationshipOperator>(
-      `MATCH relation=(characterX:Character {id: $idx})-[${relationPart}]-(characterY:Character {id: $idy})
-			RETURN relation
+      `MATCH relation=(characterX:Character {id: $idx})-[rel${relationPart}]-(characterY:Character {id: $idy})
+			RETURN relation, startNode(rel) as startNode, endNode(rel) as endNode
 			LIMIT 64`,
       {
         idx: relationInput.idx,
