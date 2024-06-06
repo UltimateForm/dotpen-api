@@ -38,10 +38,6 @@ export class ResponseProfile extends AutomapperProfile {
           (target) => target.end,
           mapFrom((source) => source.end),
         ),
-        // forMember(
-        //   (target) => target.relation,
-        //   mapFrom((source) => source.relation),
-        // ),
       );
     };
   }

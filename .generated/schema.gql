@@ -61,8 +61,8 @@ type CharacterRelationsResponseModel {
 
 type Query {
   getCharacterById(id: String!): CharacterModel!
-  getCharacters(pageNo: Int!, pageSize: Int!): [CharacterModel!]!
-  getRelationBetweenCharacters(ids: [String!]!, relation: CharacterRelationType): CharacterRelationsResponseModel!
+  getCharacters(pageNo: Int! = 0, pageSize: Int! = 0): [CharacterModel!]!
+  getRelationBetweenCharacters(pageNo: Int! = 0, pageSize: Int! = 0, ids: [String!]!, relation: CharacterRelationType): CharacterRelationsResponseModel!
 }
 
 type Mutation {
@@ -70,5 +70,5 @@ type Mutation {
   deleteCharacterById(id: String!): CharacterOperationModel!
   updateCharacter(name: String!, description: String!, debut: Int!, id: String!): CharacterOperationModel!
   putCharacterRelation(ids: [String!]!, relation: CharacterRelationType!, spark: String, level: CharacterRelationLevel!): CharacterRelationOperationModel!
-  deleteCharacterRelation(ids: [String!]!, relation: CharacterRelationType): CharacterRelationOperationModel!
+  deleteCharacterRelation(pageNo: Int! = 0, pageSize: Int! = 0, ids: [String!]!, relation: CharacterRelationType): CharacterRelationOperationModel!
 }

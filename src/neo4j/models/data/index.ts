@@ -1,4 +1,4 @@
-export { CharacterEntity } from "./nodes";
+export { CharacterEntity, CharacterEntityIdentity } from "./nodes";
 export {
   CharacterRelationLevel,
   CharacterRelationEntity,

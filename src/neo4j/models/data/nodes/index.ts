@@ -1,1 +1,1 @@
-export { CharacterEntity } from "./character.entity";
+export { CharacterEntity, CharacterEntityIdentity } from "./character.entity";
