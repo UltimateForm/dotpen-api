@@ -4,6 +4,6 @@ import { ArgsType, Field, Int } from "@nestjs/graphql";
 export class PaginationArgs {
   @Field(() => Int, { defaultValue: 0 })
   pageNo: number;
-  @Field(() => Int, { defaultValue: 0 })
+  @Field(() => Int, { defaultValue: 10 })
   pageSize: number;
 }

@@ -1,4 +1,4 @@
-export class Pagination {
+export class PaginationInput {
   skip: number;
   limit: number;
 }

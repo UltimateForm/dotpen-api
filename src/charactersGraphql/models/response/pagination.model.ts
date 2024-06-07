@@ -6,4 +6,6 @@ export class PaginationModel {
   pageNo: number;
   @Field(() => Int, { defaultValue: 0 })
   pageSize: number;
+  @Field(() => Int, { defaultValue: 0 })
+  count: number;
 }

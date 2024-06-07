@@ -4,6 +4,7 @@ import {
   CharacterOperationModel,
   CharacterRelationOperationModel,
   CharacterRelationsResponseModel,
+  CharactersResponseModel,
 } from "./models/response";
 import {
   CharacterCreateArgs,
@@ -34,10 +35,10 @@ export class CharactersResolver {
     return this.service.getCharacterById(characterArgs);
   }
 
-  @Query(() => [CharacterModel])
+  @Query(() => CharactersResponseModel)
   getCharacters(
     @Args() paginationArgs: PaginationArgs,
-  ): Promise<CharacterModel[]> {
+  ): Promise<CharactersResponseModel> {
     return this.service.getCharacters(paginationArgs);
   }
 
@@ -77,9 +78,9 @@ export class CharactersResolver {
   }
 
   @Query(() => CharacterRelationsResponseModel)
-  getRelationBetweenCharacters(
+  getRelations(
     @Args() findArgs: CharacterRelationFindArgs,
   ): Promise<CharacterRelationsResponseModel> {
-    return this.service.getRelationBetweenCharacters(findArgs);
+    return this.service.getRelations(findArgs);
   }
 }

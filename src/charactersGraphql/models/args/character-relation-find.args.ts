@@ -6,8 +6,8 @@ import { PaginationArgs } from "./pagination.args";
 @ArgsType()
 export class CharacterRelationFindArgs extends PaginationArgs {
   @AutoMap(() => [String])
-  @Field(() => [String])
-  ids: [string, string];
+  @Field(() => [String], { nullable: true })
+  ids?: string[];
   @AutoMap()
   @Field(() => CharacterRelationType, { nullable: true })
   relation?: CharacterRelationType;

@@ -7,7 +7,7 @@ import {
   CharacterRelationInput,
   CharacterRelationEntity,
   CharacterRelationType,
-  Pagination,
+  PaginationInput,
   RelationDataEntity,
 } from "./models/data";
 import { ConfigService } from "@nestjs/config";
@@ -88,7 +88,7 @@ export class Neo4jService {
     });
   }
 
-  async readCharacters(pagination: Pagination) {
+  async readCharacters(pagination: PaginationInput) {
     return this.#withSession(async (session) => {
       const read = await session.executeRead(ndx.readCharacters(pagination));
       const characters = read.records.map(
@@ -145,9 +145,52 @@ export class Neo4jService {
       const read = await session.executeRead(
         rlx.readRelationBetweenCharacters(input),
       );
-      if (!read.records.length) {
-        throw new NotFoundException();
-      }
+      return read.records.map((rec) => {
+        const entity = new CharacterRelationEntity();
+        const relation = new RelationEntity();
+        const relationSegment = rec.get("relation").segments[0];
+        const startNode = rec.get("startNode");
+        const endNode = rec.get("endNode");
+        relation.type = relationSegment.relationship
+          .type as CharacterRelationType;
+        relation.data = relationSegment.relationship
+          .properties as RelationDataEntity;
+        entity.relation = relation;
+        entity.start = startNode.properties as CharacterEntity;
+        entity.end = endNode.properties as CharacterEntity;
+        return entity;
+      });
+    });
+  }
+
+  async readCharacterRelations(
+    input: CharacterRelationFindInput,
+  ): Promise<CharacterRelationEntity[]> {
+    return this.#withSession(async (session) => {
+      const read = await session.executeRead(rlx.readCharacterRelations(input));
+      return read.records.map((rec) => {
+        const entity = new CharacterRelationEntity();
+        const relation = new RelationEntity();
+        const relationSegment = rec.get("relation").segments[0];
+        const startNode = rec.get("startNode");
+        const endNode = rec.get("endNode");
+        relation.type = relationSegment.relationship
+          .type as CharacterRelationType;
+        relation.data = relationSegment.relationship
+          .properties as RelationDataEntity;
+        entity.relation = relation;
+        entity.start = startNode.properties as CharacterEntity;
+        entity.end = endNode.properties as CharacterEntity;
+        return entity;
+      });
+    });
+  }
+
+  async readAllRelations(
+    input: CharacterRelationFindInput,
+  ): Promise<CharacterRelationEntity[]> {
+    return this.#withSession(async (session) => {
+      const read = await session.executeRead(rlx.readAllRelations(input));
       return read.records.map((rec) => {
         const entity = new CharacterRelationEntity();
         const relation = new RelationEntity();

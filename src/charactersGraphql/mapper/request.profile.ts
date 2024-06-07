@@ -5,12 +5,14 @@ import {
   CharacterEntity,
   CharacterRelationFindInput,
   CharacterRelationInput,
+  PaginationInput,
 } from "src/neo4j";
 import {
   CharacterCreateArgs,
   CharacterPutRelationArgs,
   CharacterRelationFindArgs,
   CharacterUpdateArgs,
+  PaginationArgs,
 } from "../models/args";
 
 @Injectable()
@@ -21,6 +23,7 @@ export class RequestProfile extends AutomapperProfile {
 
   override get profile() {
     return (mapper) => {
+      createMap(mapper, PaginationArgs, PaginationInput);
       createMap(mapper, CharacterCreateArgs, CharacterEntity);
       createMap(mapper, CharacterUpdateArgs, CharacterEntity);
       createMap(
@@ -42,11 +45,19 @@ export class RequestProfile extends AutomapperProfile {
         CharacterRelationFindInput,
         forMember(
           (target) => target.idx,
-          mapFrom((source) => source.ids[0]),
+          mapFrom((source) => source.ids?.[0]),
         ),
         forMember(
           (target) => target.idy,
-          mapFrom((source) => source.ids[1]),
+          mapFrom((source) => source.ids?.[1]),
+        ),
+        forMember(
+          (target) => target.skip,
+          mapFrom((source) => source.pageNo * source.pageSize),
+        ),
+        forMember(
+          (target) => target.limit,
+          mapFrom((source) => source.pageSize),
         ),
       );
     };

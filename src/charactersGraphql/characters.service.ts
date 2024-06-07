@@ -1,4 +1,4 @@
-import { HttpException, Injectable } from "@nestjs/common";
+import { BadRequestException, HttpException, Injectable } from "@nestjs/common";
 import {
   CharacterEntity,
   CharacterRelationFindInput,
@@ -20,6 +20,7 @@ import {
   CharacterRelationModel,
   CharacterRelationOperationModel,
   CharacterRelationsResponseModel,
+  CharactersResponseModel,
 } from "./models/response";
 import { InjectPinoLogger, PinoLogger } from "nestjs-pino";
 import { Mapper } from "@automapper/core";
@@ -112,7 +113,12 @@ export class CharactersService {
       CharacterEntity,
       CharacterModel,
     );
-    return mappedCharacters;
+    const response = new CharactersResponseModel();
+    response.characters = mappedCharacters;
+    response.count = mappedCharacters.length;
+    response.pageNo = paginationArgs.pageNo;
+    response.pageSize = paginationArgs.pageSize;
+    return response;
   }
 
   async putCharacterRelation(
@@ -165,7 +171,7 @@ export class CharactersService {
     return operationModel;
   }
 
-  async getRelationBetweenCharacters(
+  async getRelations(
     args: CharacterRelationFindArgs,
   ): Promise<CharacterRelationsResponseModel> {
     const mappedInput = this.automapper.map(
@@ -173,16 +179,26 @@ export class CharactersService {
       CharacterRelationFindArgs,
       CharacterRelationFindInput,
     );
-    const output = await this.db.readRelationBetweenCharacters(mappedInput);
-    this.logger.assign({ output });
-    const aggregateModel = this.automapper.mapArray(
-      output,
+    let dbResponse: CharacterRelationEntity[] = [];
+    if (!args.ids) {
+      dbResponse = await this.db.readAllRelations(mappedInput);
+    } else if (args.ids.length === 1) {
+      dbResponse = await this.db.readCharacterRelations(mappedInput);
+    } else if (args.ids.length === 2) {
+      dbResponse = await this.db.readRelationBetweenCharacters(mappedInput);
+    } else {
+      throw new BadRequestException("Ids max length is 2");
+    }
+    const relationsList = this.automapper.mapArray(
+      dbResponse,
       CharacterRelationEntity,
       CharacterRelationModel,
     );
     const responseModel = new CharacterRelationsResponseModel();
-    responseModel.pageSize = aggregateModel.length;
-    responseModel.relations = aggregateModel;
+    responseModel.count = relationsList.length;
+    responseModel.pageNo = args.pageNo;
+    responseModel.pageSize = args.pageSize;
+    responseModel.relations = relationsList;
     return responseModel;
   }
 }

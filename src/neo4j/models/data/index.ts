@@ -8,4 +8,4 @@ export {
   CharacterRelationFindInput,
   RelationEntity,
 } from "./relationships";
-export { Pagination } from "./pagination";
+export { PaginationInput } from "./pagination.input";
