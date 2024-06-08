@@ -6,7 +6,7 @@ import {
   CharacterRelationFindInput,
   CharacterRelationInput,
   PaginationInput,
-} from "@dotpen/neo4j";
+} from "@dotpen/charactersRepository";
 import {
   CharacterCreateArgs,
   CharacterPutRelationArgs,

@@ -1,10 +1,10 @@
 import {
   CharacterEntity,
   CharacterRelationInput,
-  Neo4jService,
+  CharactersRepositoryService,
   CharacterRelationEntity,
   CharacterRelationFindInput,
-} from "@dotpen/neo4j";
+} from "@dotpen/charactersRepository";
 import { CharactersService } from "./characters.service";
 import { Mapper } from "@automapper/core";
 import { PinoLogger } from "nestjs-pino";
@@ -25,14 +25,18 @@ import { TDeepPartial } from "@dotpen/testing/types";
 
 describe("getCharacterById", () => {
   let service: CharactersService;
-  let neo4jService: MockProxy<Neo4jService>;
+  let charactersRepositoryService: MockProxy<CharactersRepositoryService>;
   let logger: MockProxy<PinoLogger>;
   let mapper: MockProxy<Mapper>;
   beforeEach(async () => {
-    neo4jService = mock<Neo4jService>();
+    charactersRepositoryService = mock<CharactersRepositoryService>();
     mapper = mock<Mapper>();
     logger = mock<PinoLogger>();
-    service = new CharactersService(neo4jService, mapper, logger);
+    service = new CharactersService(
+      charactersRepositoryService,
+      mapper,
+      logger,
+    );
   });
 
   test("getCharacterById", async () => {
@@ -52,10 +56,14 @@ describe("getCharacterById", () => {
       description: "description",
       debut: 0,
     };
-    neo4jService.readCharacterById.mockReturnValue(Promise.resolve(entity));
+    charactersRepositoryService.readCharacterById.mockReturnValue(
+      Promise.resolve(entity),
+    );
     mapper.map.mockReturnValue(model as any);
     const response = await service.getCharacterById(findArgs);
-    expect(neo4jService.readCharacterById).toHaveBeenNthCalledWith(1, testId);
+    expect(
+      charactersRepositoryService.readCharacterById,
+    ).toHaveBeenNthCalledWith(1, testId);
     expect(mapper.map).toHaveBeenNthCalledWith(
       1,
       entity,
@@ -68,14 +76,18 @@ describe("getCharacterById", () => {
 
 describe("updateCharacterById", () => {
   let service: CharactersService;
-  let neo4jService: MockProxy<Neo4jService>;
+  let charactersRepositoryService: MockProxy<CharactersRepositoryService>;
   let logger: MockProxy<PinoLogger>;
   let mapper: MockProxy<Mapper>;
   beforeEach(async () => {
-    neo4jService = mock<Neo4jService>();
+    charactersRepositoryService = mock<CharactersRepositoryService>();
     mapper = mock<Mapper>();
     logger = mock<PinoLogger>();
-    service = new CharactersService(neo4jService, mapper, logger);
+    service = new CharactersService(
+      charactersRepositoryService,
+      mapper,
+      logger,
+    );
   });
 
   test("happy path should return response", async () => {
@@ -97,7 +109,9 @@ describe("updateCharacterById", () => {
       description: "description",
       debut: 0,
     };
-    neo4jService.updateCharacterById.mockReturnValue(Promise.resolve(entity));
+    charactersRepositoryService.updateCharacterById.mockReturnValue(
+      Promise.resolve(entity),
+    );
     mapper.map
       .calledWith(entity as any, CharacterEntity as any, CharacterModel as any)
       .mockReturnValue(model as any);
@@ -109,7 +123,9 @@ describe("updateCharacterById", () => {
       )
       .mockReturnValue(entity as any);
     const response = await service.updateCharacterById(args);
-    expect(neo4jService.updateCharacterById).toHaveBeenNthCalledWith(1, entity);
+    expect(
+      charactersRepositoryService.updateCharacterById,
+    ).toHaveBeenNthCalledWith(1, entity);
     expect(response.success).toBe(true);
     expect(response.character).toBe(model);
   });
@@ -127,9 +143,11 @@ describe("updateCharacterById", () => {
       description: "description",
       debut: 0,
     };
-    neo4jService.updateCharacterById.mockImplementationOnce(() => {
-      throw new NotFoundException("Test err");
-    });
+    charactersRepositoryService.updateCharacterById.mockImplementationOnce(
+      () => {
+        throw new NotFoundException("Test err");
+      },
+    );
     mapper.map
       .calledWith(
         args as any,
@@ -155,9 +173,11 @@ describe("updateCharacterById", () => {
       description: "description",
       debut: 0,
     };
-    neo4jService.updateCharacterById.mockImplementationOnce(() => {
-      throw new Error("Test err");
-    });
+    charactersRepositoryService.updateCharacterById.mockImplementationOnce(
+      () => {
+        throw new Error("Test err");
+      },
+    );
     mapper.map
       .calledWith(
         args as any,
@@ -173,14 +193,18 @@ describe("updateCharacterById", () => {
 
 describe("putCharacterRelation", () => {
   let service: CharactersService;
-  let neo4jService: MockProxy<Neo4jService>;
+  let charactersRepositoryService: MockProxy<CharactersRepositoryService>;
   let logger: MockProxy<PinoLogger>;
   let mapper: MockProxy<Mapper>;
   beforeEach(async () => {
-    neo4jService = mock<Neo4jService>();
+    charactersRepositoryService = mock<CharactersRepositoryService>();
     mapper = mock<Mapper>();
     logger = mock<PinoLogger>();
-    service = new CharactersService(neo4jService, mapper, logger);
+    service = new CharactersService(
+      charactersRepositoryService,
+      mapper,
+      logger,
+    );
   });
 
   test("happy path returns response", async () => {
@@ -202,13 +226,13 @@ describe("putCharacterRelation", () => {
         CharacterRelationModel as any,
       )
       .mockReturnValue(graphqlResponse as any);
-    neo4jService.putRelation.mockReturnValue(
+    charactersRepositoryService.putRelation.mockReturnValue(
       Promise.resolve(dbResponse as CharacterRelationEntity),
     );
     const response = await service.putCharacterRelation(
       args as CharacterPutRelationArgs,
     );
-    expect(neo4jService.putRelation).toHaveBeenNthCalledWith(
+    expect(charactersRepositoryService.putRelation).toHaveBeenNthCalledWith(
       1,
       dbInput as CharacterRelationInput,
     );
@@ -226,7 +250,7 @@ describe("putCharacterRelation", () => {
         CharacterRelationInput as any,
       )
       .mockReturnValue(dbInput as any);
-    neo4jService.putRelation.mockImplementationOnce(async () => {
+    charactersRepositoryService.putRelation.mockImplementationOnce(async () => {
       throw new NotFoundException("Test err");
     });
     expect(
@@ -245,7 +269,7 @@ describe("putCharacterRelation", () => {
         CharacterRelationInput as any,
       )
       .mockReturnValue(dbInput as any);
-    neo4jService.putRelation.mockImplementationOnce(async () => {
+    charactersRepositoryService.putRelation.mockImplementationOnce(async () => {
       throw new Error("Test err");
     });
     const response = await service.putCharacterRelation(
@@ -258,14 +282,18 @@ describe("putCharacterRelation", () => {
 
 describe("getRelations", () => {
   let service: CharactersService;
-  let neo4jService: MockProxy<Neo4jService>;
+  let charactersRepositoryService: MockProxy<CharactersRepositoryService>;
   let logger: MockProxy<PinoLogger>;
   let mapper: MockProxy<Mapper>;
   beforeEach(async () => {
-    neo4jService = mock<Neo4jService>();
+    charactersRepositoryService = mock<CharactersRepositoryService>();
     mapper = mock<Mapper>();
     logger = mock<PinoLogger>();
-    service = new CharactersService(neo4jService, mapper, logger);
+    service = new CharactersService(
+      charactersRepositoryService,
+      mapper,
+      logger,
+    );
   });
 
   test("happy path for all relations", async () => {
@@ -290,7 +318,7 @@ describe("getRelations", () => {
         CharacterRelationFindInput as any,
       )
       .mockReturnValue(dbInput);
-    neo4jService.readAllRelations.mockReturnValue(
+    charactersRepositoryService.readAllRelations.mockReturnValue(
       Promise.resolve(dbResponse as CharacterRelationEntity[]),
     );
     mapper.mapArray
@@ -303,9 +331,15 @@ describe("getRelations", () => {
     const response = await service.getRelations(
       args as CharacterRelationFindArgs,
     );
-    expect(neo4jService.readCharacterRelations).not.toHaveBeenCalled();
-    expect(neo4jService.readRelationBetweenCharacters).not.toHaveBeenCalled();
-    expect(neo4jService.readAllRelations).toHaveBeenNthCalledWith(1, dbInput);
+    expect(
+      charactersRepositoryService.readCharacterRelations,
+    ).not.toHaveBeenCalled();
+    expect(
+      charactersRepositoryService.readRelationBetweenCharacters,
+    ).not.toHaveBeenCalled();
+    expect(
+      charactersRepositoryService.readAllRelations,
+    ).toHaveBeenNthCalledWith(1, dbInput);
     expect(response).toEqual(graphqlAggregatedResponse);
   });
 
@@ -335,7 +369,7 @@ describe("getRelations", () => {
         CharacterRelationFindInput as any,
       )
       .mockReturnValue(dbInput);
-    neo4jService.readRelationBetweenCharacters.mockReturnValue(
+    charactersRepositoryService.readRelationBetweenCharacters.mockReturnValue(
       Promise.resolve(dbResponse as CharacterRelationEntity[]),
     );
     mapper.mapArray
@@ -348,12 +382,13 @@ describe("getRelations", () => {
     const response = await service.getRelations(
       args as CharacterRelationFindArgs,
     );
-    expect(neo4jService.readCharacterRelations).not.toHaveBeenCalled();
-    expect(neo4jService.readRelationBetweenCharacters).toHaveBeenNthCalledWith(
-      1,
-      dbInput,
-    );
-    expect(neo4jService.readAllRelations).not.toHaveBeenCalled();
+    expect(
+      charactersRepositoryService.readCharacterRelations,
+    ).not.toHaveBeenCalled();
+    expect(
+      charactersRepositoryService.readRelationBetweenCharacters,
+    ).toHaveBeenNthCalledWith(1, dbInput);
+    expect(charactersRepositoryService.readAllRelations).not.toHaveBeenCalled();
     expect(response).toEqual(graphqlAggregatedResponse);
   });
 
@@ -382,7 +417,7 @@ describe("getRelations", () => {
         CharacterRelationFindInput as any,
       )
       .mockReturnValue(dbInput);
-    neo4jService.readCharacterRelations.mockReturnValue(
+    charactersRepositoryService.readCharacterRelations.mockReturnValue(
       Promise.resolve(dbResponse as CharacterRelationEntity[]),
     );
     mapper.mapArray
@@ -395,12 +430,13 @@ describe("getRelations", () => {
     const response = await service.getRelations(
       args as CharacterRelationFindArgs,
     );
-    expect(neo4jService.readRelationBetweenCharacters).not.toHaveBeenCalled();
-    expect(neo4jService.readCharacterRelations).toHaveBeenNthCalledWith(
-      1,
-      dbInput,
-    );
-    expect(neo4jService.readAllRelations).not.toHaveBeenCalled();
+    expect(
+      charactersRepositoryService.readRelationBetweenCharacters,
+    ).not.toHaveBeenCalled();
+    expect(
+      charactersRepositoryService.readCharacterRelations,
+    ).toHaveBeenNthCalledWith(1, dbInput);
+    expect(charactersRepositoryService.readAllRelations).not.toHaveBeenCalled();
     expect(response).toEqual(graphqlAggregatedResponse);
   });
 });

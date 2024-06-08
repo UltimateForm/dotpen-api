@@ -17,12 +17,12 @@ import { InjectPinoLogger, PinoLogger } from "nestjs-pino";
 import { rlx } from "./transactions/relationships";
 
 @Injectable()
-export class Neo4jService {
-  static className = "Neo4jService";
+export class CharactersRepositoryService {
+  static className = "CharactersRepositoryService";
   constructor(
     private driver: Driver,
     private config: ConfigService,
-    @InjectPinoLogger(Neo4jService.className)
+    @InjectPinoLogger(CharactersRepositoryService.className)
     private readonly logger: PinoLogger,
   ) {}
 

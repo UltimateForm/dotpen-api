@@ -1,5 +1,5 @@
 import { Module } from "@nestjs/common";
-import { Neo4jService } from "./neo4j.service";
+import { CharactersRepositoryService } from "./characters-repository.service";
 import neo4j from "neo4j-driver";
 import { ConfigService } from "@nestjs/config";
 
@@ -20,8 +20,8 @@ import { ConfigService } from "@nestjs/config";
       },
       inject: [ConfigService],
     },
-    Neo4jService,
+    CharactersRepositoryService,
   ],
-  exports: [Neo4jService],
+  exports: [CharactersRepositoryService],
 })
-export class Neo4jModule {}
+export class CharactersRepositoryModule {}

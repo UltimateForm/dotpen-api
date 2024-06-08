@@ -1,4 +1,4 @@
-import { CharacterRelationType } from "@dotpen/neo4j";
+import { CharacterRelationType } from "@dotpen/charactersRepository";
 import { BadRequestException } from "@nestjs/common";
 
 export function enforceRelationshipType(source: any) {

@@ -6,7 +6,7 @@ import {
   RelationEntity,
   RelationDataEntity,
   CharacterRelationEntity,
-} from "@dotpen/neo4j";
+} from "@dotpen/charactersRepository";
 import {
   CharacterModel,
   CharacterRelationModel,

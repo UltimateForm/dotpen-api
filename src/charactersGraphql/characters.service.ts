@@ -4,8 +4,8 @@ import {
   CharacterRelationFindInput,
   CharacterRelationInput,
   CharacterRelationEntity,
-  Neo4jService,
-} from "@dotpen/neo4j";
+  CharactersRepositoryService,
+} from "@dotpen/charactersRepository";
 
 import {
   CharacterCreateArgs,
@@ -31,7 +31,7 @@ import { InjectMapper } from "@automapper/nestjs";
 export class CharactersService {
   static className = "CharactersService";
   constructor(
-    private db: Neo4jService,
+    private db: CharactersRepositoryService,
     @InjectMapper() private readonly automapper: Mapper,
     @InjectPinoLogger(CharactersService.className)
     private readonly logger: PinoLogger,
