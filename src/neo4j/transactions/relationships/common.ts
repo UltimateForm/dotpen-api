@@ -1,5 +1,5 @@
+import { CharacterRelationType } from "@dotpen/neo4j";
 import { BadRequestException } from "@nestjs/common";
-import { CharacterRelationType } from "@charactersGraphql";
 
 export function enforceRelationshipType(source: any) {
   const expectedTypes = Object.values(CharacterRelationType);

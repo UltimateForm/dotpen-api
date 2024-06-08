@@ -82,8 +82,7 @@
     "coverageDirectory": "../coverage",
     "testEnvironment": "node",
     "moduleNameMapper": {
-      "@neo4j": "<rootDir>/src/neo4j",
-      "@charactersGraphql": "<rootDir>/src/charactersGraphql"
+      "@dotpen/(.*)": "<rootDir>/src/$1/"
     }
   }
 }

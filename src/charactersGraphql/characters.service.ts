@@ -5,7 +5,7 @@ import {
   CharacterRelationInput,
   CharacterRelationEntity,
   Neo4jService,
-} from "@neo4j";
+} from "@dotpen/neo4j";
 
 import {
   CharacterCreateArgs,

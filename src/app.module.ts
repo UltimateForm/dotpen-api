@@ -1,5 +1,5 @@
 import { Module } from "@nestjs/common";
-import { CharactersGraphqlModule } from "@charactersGraphql";
+import { CharactersGraphqlModule } from "@dotpen/charactersGraphql";
 import { GraphQLModule } from "@nestjs/graphql";
 import { ApolloDriver, ApolloDriverConfig } from "@nestjs/apollo";
 import { ConfigModule } from "@nestjs/config";
@@ -16,7 +16,7 @@ import { classes } from "@automapper/classes";
     ConfigModule.forRoot({ isGlobal: true }),
     GraphQLModule.forRoot<ApolloDriverConfig>({
       driver: ApolloDriver,
-      playground: false,
+      playground: true,
       autoSchemaFile: {
         path: ".generated/schema.gql",
       },
