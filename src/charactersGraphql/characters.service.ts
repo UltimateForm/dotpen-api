@@ -5,7 +5,8 @@ import {
   CharacterRelationInput,
   CharacterRelationEntity,
   Neo4jService,
-} from "../neo4j";
+} from "@neo4j";
+
 import {
   CharacterCreateArgs,
   CharacterFindArgs,
@@ -64,7 +65,7 @@ export class CharactersService {
 
   async getCharacterById(characterArgs: CharacterFindArgs) {
     const id = characterArgs.id;
-    const result = await this.db.getCharacterById(id);
+    const result = await this.db.readCharacterById(id);
     const mapped = this.automapper.map(result, CharacterEntity, CharacterModel);
     return mapped;
   }

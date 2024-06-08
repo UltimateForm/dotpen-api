@@ -16,6 +16,10 @@
     "noImplicitAny": false,
     "strictBindCallApply": false,
     "forceConsistentCasingInFileNames": false,
-    "noFallthroughCasesInSwitch": false
+    "noFallthroughCasesInSwitch": false,
+    "paths": {
+      "@neo4j": ["./src/neo4j"],
+      "@charactersGraphql": ["./src/charactersGraphql"]
+    }
   }
 }

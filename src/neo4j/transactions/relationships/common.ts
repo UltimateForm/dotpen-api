@@ -1,5 +1,5 @@
 import { BadRequestException } from "@nestjs/common";
-import { CharacterRelationType } from "src/charactersGraphql";
+import { CharacterRelationType } from "@charactersGraphql";
 
 export function enforceRelationshipType(source: any) {
   const expectedTypes = Object.values(CharacterRelationType);

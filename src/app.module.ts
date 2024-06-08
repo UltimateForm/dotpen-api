@@ -1,5 +1,5 @@
 import { Module } from "@nestjs/common";
-import { CharactersGraphqlModule } from "./charactersGraphql";
+import { CharactersGraphqlModule } from "@charactersGraphql";
 import { GraphQLModule } from "@nestjs/graphql";
 import { ApolloDriver, ApolloDriverConfig } from "@nestjs/apollo";
 import { ConfigModule } from "@nestjs/config";

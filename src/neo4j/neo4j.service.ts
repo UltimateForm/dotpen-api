@@ -52,7 +52,7 @@ export class Neo4jService {
     });
   }
 
-  async getCharacterById(id: CharacterEntity["id"]) {
+  async readCharacterById(id: CharacterEntity["id"]) {
     return this.#withSession(async (session) => {
       const read = await session.executeRead(ndx.readSingleCharacterById(id));
       if (!read.records.length) {
