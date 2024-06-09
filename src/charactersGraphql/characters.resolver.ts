@@ -18,7 +18,10 @@ import {
 } from "./models/args";
 import { CharactersService } from "./characters.service";
 import { InjectPinoLogger, PinoLogger } from "nestjs-pino";
+import { UseGuards } from "@nestjs/common";
+import { GraphqlAuthGuard } from "@dotpen/common/guards";
 
+@UseGuards(GraphqlAuthGuard)
 @Resolver()
 export class CharactersResolver {
   static className = "CharactersResolver";

@@ -6,10 +6,11 @@ import {
   CharacterRelationLevel,
   CharacterRelationType,
 } from "./charactersGraphql";
+import { ValidationPipe } from "@nestjs/common";
 
 async function bootstrap() {
   const app = await NestFactory.create(AppModule, { bufferLogs: true });
-
+  app.useGlobalPipes(new ValidationPipe());
   registerEnumType(CharacterRelationLevel, {
     name: "CharacterRelationLevel",
   });

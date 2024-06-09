@@ -2,10 +2,12 @@ import { Module } from "@nestjs/common";
 import { CharactersGraphqlModule } from "@dotpen/charactersGraphql";
 import { GraphQLModule } from "@nestjs/graphql";
 import { ApolloDriver, ApolloDriverConfig } from "@nestjs/apollo";
-import { ConfigModule } from "@nestjs/config";
+import { ConfigModule, ConfigService } from "@nestjs/config";
 import { LoggerModule } from "nestjs-pino";
 import { AutomapperModule } from "@automapper/nestjs";
 import { classes } from "@automapper/classes";
+import { AuthRestModule } from "./authRest";
+import { JwtModule } from "@nestjs/jwt";
 
 @Module({
   imports: [
@@ -14,6 +16,16 @@ import { classes } from "@automapper/classes";
     }),
     LoggerModule.forRoot(),
     ConfigModule.forRoot({ isGlobal: true }),
+    JwtModule.registerAsync({
+      imports: [ConfigModule],
+      useFactory: async (configService: ConfigService) => ({
+        global: true,
+        secret: configService.get("JWT_SECRET"),
+        signOptions: { expiresIn: "1h" },
+      }),
+      inject: [ConfigService],
+      global: true,
+    }),
     GraphQLModule.forRoot<ApolloDriverConfig>({
       driver: ApolloDriver,
       playground: true,
@@ -22,6 +34,7 @@ import { classes } from "@automapper/classes";
       },
     }),
     CharactersGraphqlModule,
+    AuthRestModule,
   ],
 })
 export class AppModule {}
