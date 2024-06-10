@@ -21,6 +21,7 @@ import { InjectPinoLogger, PinoLogger } from "nestjs-pino";
 import { UseGuards } from "@nestjs/common";
 import { GraphqlAuthGuard } from "@dotpen/common/guards";
 
+// @note: most of these are wrong, this is a graphql resolver written like a controller
 @UseGuards(GraphqlAuthGuard)
 @Resolver()
 export class CharactersResolver {
