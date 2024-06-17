@@ -67,10 +67,43 @@ type CharactersResponseModel {
   characters: [CharacterModel!]!
 }
 
+type RelationshipDataModel {
+  spark: String
+  level: CharacterRelationLevel!
+}
+
+type RelationshipModel {
+  type: CharacterRelationType!
+  data: RelationshipDataModel!
+}
+
+type CharRelationModel {
+  start: CharModel!
+  end: CharModel!
+  relation: RelationshipModel!
+}
+
+type CharModel {
+  id: String!
+  name: String!
+  description: String!
+  debut: Int!
+  relations: [CharRelationModel!]!
+}
+
+type CharsListModel {
+  pageNo: Int!
+  pageSize: Int!
+  count: Int!
+  chars: [CharModel!]!
+  relations: [CharRelationModel!]!
+}
+
 type Query {
   getCharacterById(id: String!): CharacterModel!
   getCharacters(pageNo: Int! = 0, pageSize: Int! = 10): CharactersResponseModel!
   getRelations(pageNo: Int! = 0, pageSize: Int! = 10, ids: [String!], relation: CharacterRelationType): CharacterRelationsResponseModel!
+  charsList(pageNo: Int! = 0, pageSize: Int! = 10): CharsListModel!
 }
 
 type Mutation {

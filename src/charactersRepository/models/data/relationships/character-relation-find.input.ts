@@ -6,5 +6,5 @@ export class CharacterRelationFindInput extends PaginationInput {
   idx?: string;
   idy?: string;
   @AutoMap()
-  relation: CharacterRelationType;
+  relation?: CharacterRelationType;
 }
