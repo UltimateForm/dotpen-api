@@ -6,10 +6,10 @@ phases:
       - apt-get update
       - apt-get -y install curl
       - curl -o- https://raw.githubusercontent.com/nvm-sh/nvm/v0.40.0/install.sh | bash
-      - . ~/.bashrc
   pre_build:
     commands:
       - echo START
+      - . ~/.bashrc
       - nvm use
       - corepack enable pnpm
       - pnpm install
