@@ -1,0 +1,27 @@
+version: 0.2
+
+phases:
+  install:
+    commands:
+      - apt-get update
+      - apt-get install curl
+      - curl -o- https://raw.githubusercontent.com/nvm-sh/nvm/v0.40.0/install.sh | bash
+      - export NVM_DIR="$([ -z "${XDG_CONFIG_HOME-}" ] && printf %s "${HOME}/.nvm" || printf %s "${XDG_CONFIG_HOME}/nvm")" [ -s "$NVM_DIR/nvm.sh" ] && \. "$NVM_DIR/nvm.sh"
+  pre_build:
+    commands:
+      - echo START
+      - corepack enable pnpm
+      - pnpm install
+  build:
+    commands:
+      - pnpm test
+      - pnpm lint
+      - pnpm build
+  post_build:
+    commands:
+      - echo END
+
+artifacts:
+  files:
+    - '**/*'
+  base-directory: './dist/'
