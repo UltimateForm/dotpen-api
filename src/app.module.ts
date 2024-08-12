@@ -2,6 +2,8 @@ import { Module } from "@nestjs/common";
 import { CharactersGraphqlModule } from "@dotpen/charactersGraphql";
 import { GraphQLModule } from "@nestjs/graphql";
 import { CharactersGraphqlV2Module } from "@dotpen/charactersGraphqlV2";
+import { CharactersRestModule } from "@dotpen/charactersRest";
+
 import { ApolloDriver, ApolloDriverConfig } from "@nestjs/apollo";
 import { ConfigModule, ConfigService } from "@nestjs/config";
 import { LoggerModule } from "nestjs-pino";
@@ -37,6 +39,7 @@ import { JwtModule } from "@nestjs/jwt";
     CharactersGraphqlModule,
     CharactersGraphqlV2Module,
     AuthRestModule,
+    CharactersRestModule,
   ],
 })
 export class AppModule {}
