@@ -8,6 +8,7 @@ import { InjectPinoLogger, PinoLogger } from "nestjs-pino";
 import { CharacterModel, CharactersResponseModel } from "./models/response";
 import { PaginationRequestModel } from "./models/request";
 import { Injectable } from "@nestjs/common";
+import { CharacterOperationModel } from "./models/response/character-operation.model";
 
 @Injectable()
 export class CharactersService {
@@ -35,5 +36,18 @@ export class CharactersService {
     response.pageNo = paginationArgs.pageNo;
     response.pageSize = paginationArgs.pageSize;
     return response;
+  }
+
+  async getCharacterById(id: string) {
+    const result = await this.db.readCharacterById(id);
+    const mapped = this.automapper.map(result, CharacterEntity, CharacterModel);
+    return mapped;
+  }
+
+  async deleteCharacterById(id: string) {
+    await this.db.deleteCharacterById(id);
+    const result = new CharacterOperationModel();
+    result.success = true;
+    return result;
   }
 }
