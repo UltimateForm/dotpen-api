@@ -18,11 +18,12 @@ phases:
       - aws ecr get-login-password --region $AWS_DEFAULT_REGION | docker login --username AWS --password-stdin $ECR_URI
       - corepack enable pnpm
       - pnpm install
+      - pnpm i -g @vercel/ncc@0.38.1
   build:
     commands:
       - pnpm test
       - pnpm lint
-      - pnpm build
+      - ncc build src/main.ts -o dist
       - docker build -t $REPOSITORY_URI:latest .
       - docker tag $REPOSITORY_URI:latest $REPOSITORY_URI:$IMAGE_TAG
   post_build:
