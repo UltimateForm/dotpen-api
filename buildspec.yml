@@ -9,6 +9,9 @@ phases:
   pre_build:
     commands:
       - echo START
+      - ACCOUNT_ID=$(aws sts get-caller-identity --query "Account" --output text)
+      - TIMESTAMP=$(date +%Y%m%d%H%M%S)
+      - IMAGE_TAG=${TIMESTAMP:=latest}
       - REPOSITORY_URI=$ACCOUNT_ID.dkr.ecr.$AWS_DEFAULT_REGION.amazonaws.com/$ECR_FOLDER
       - corepack enable pnpm
       - pnpm install
@@ -18,6 +21,8 @@ phases:
       - pnpm lint
       - pnpm build
       - echo $REPOSITORY_URI
+      - echo $TIMESTAMP
+      - echo $IMAGE_TAG
   post_build:
     commands:
       - echo END
