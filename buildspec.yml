@@ -10,6 +10,7 @@ phases:
     commands:
       - echo START
       - ACCOUNT_ID=$(aws sts get-caller-identity --query "Account" --output text)
+      - ECR_FOLDER=dotpen-api
       - TIMESTAMP=$(date +%Y%m%d%H%M%S)
       - IMAGE_TAG=${TIMESTAMP:=latest}
       - REPOSITORY_URI=$ACCOUNT_ID.dkr.ecr.$AWS_DEFAULT_REGION.amazonaws.com/$ECR_FOLDER
@@ -23,6 +24,7 @@ phases:
       - echo $REPOSITORY_URI
       - echo $TIMESTAMP
       - echo $IMAGE_TAG
+      - echo $ECR_FOLDER
   post_build:
     commands:
       - echo END
