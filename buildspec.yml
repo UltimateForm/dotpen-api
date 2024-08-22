@@ -9,6 +9,7 @@ phases:
   pre_build:
     commands:
       - echo START
+      - REPOSITORY_URI=$ACCOUNT_ID.dkr.ecr.$AWS_DEFAULT_REGION.amazonaws.com/$ECR_FOLDER
       - corepack enable pnpm
       - pnpm install
   build:
@@ -16,10 +17,10 @@ phases:
       - pnpm test
       - pnpm lint
       - pnpm build
+      - echo $REPOSITORY_URI
   post_build:
     commands:
       - echo END
-
 artifacts:
   files:
     - '**/*'
