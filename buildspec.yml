@@ -13,7 +13,9 @@ phases:
       - ECR_FOLDER=dotpen-api
       - TIMESTAMP=$(date +%Y%m%d%H%M%S)
       - IMAGE_TAG=${TIMESTAMP:=latest}
-      - REPOSITORY_URI=$ACCOUNT_ID.dkr.ecr.$AWS_DEFAULT_REGION.amazonaws.com/$ECR_FOLDER
+      - ECR_URI=$ACCOUNT_ID.dkr.ecr.$AWS_DEFAULT_REGION.amazonaws.com
+      - REPOSITORY_URI=$ECR_URI/$ECR_FOLDER
+      - aws ecr get-login-password --region $AWS_DEFAULT_REGION | docker login --username AWS --password-stdin $ECR_URI
       - corepack enable pnpm
       - pnpm install
   build:
