@@ -1,1 +1,1 @@
-export { LoginResponse } from "./login.response";
+export { LoginResponseModel } from "./login-response.model";

@@ -1,7 +1,7 @@
 import { AutoMap } from "@automapper/classes";
 import { IsEmail, IsNotEmpty } from "class-validator";
 
-export class LoginRequest {
+export class LoginRequestModel {
   @AutoMap()
   @IsEmail()
   email: string;

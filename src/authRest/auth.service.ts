@@ -3,8 +3,8 @@ import { InjectMapper } from "@automapper/nestjs";
 import { AuthRepositoryService, UserEntity } from "@dotpen/authRepository";
 import { Injectable, UnauthorizedException } from "@nestjs/common";
 import { InjectPinoLogger, PinoLogger } from "nestjs-pino";
-import { LoginRequest } from "./models/request";
-import { LoginResponse } from "./models/response";
+import { LoginRequestModel } from "./models/request";
+import { LoginResponseModel } from "./models/response";
 import { JwtService } from "@nestjs/jwt";
 
 @Injectable()
@@ -18,17 +18,17 @@ export class AuthService {
     private readonly logger: PinoLogger,
   ) {}
 
-  async login(request: LoginRequest): Promise<LoginResponse> {
+  async login(request: LoginRequestModel): Promise<LoginResponseModel> {
     const mappedRequest = this.automapper.map(
       request,
-      LoginRequest,
+      LoginRequestModel,
       UserEntity,
     );
     const existsAtomically = await this.db.userExistsAtomically(mappedRequest);
     if (!existsAtomically) {
       throw new UnauthorizedException();
     }
-    const response = new LoginResponse();
+    const response = new LoginResponseModel();
     const jwttPayload = {
       email: request.email,
     };

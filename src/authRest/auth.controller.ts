@@ -1,6 +1,6 @@
 import { InjectPinoLogger, PinoLogger } from "nestjs-pino";
-import { LoginResponse } from "./models/response";
-import { LoginRequest } from "./models/request";
+import { LoginResponseModel } from "./models/response";
+import { LoginRequestModel } from "./models/request";
 import { Body, Controller, HttpCode, HttpStatus, Post } from "@nestjs/common";
 import { AuthService } from "./auth.service";
 
@@ -15,7 +15,7 @@ export class AuthController {
 
   @HttpCode(HttpStatus.OK)
   @Post("login")
-  login(@Body() loginRequest: LoginRequest): Promise<LoginResponse> {
+  login(@Body() loginRequest: LoginRequestModel): Promise<LoginResponseModel> {
     return this.service.login(loginRequest);
   }
 }

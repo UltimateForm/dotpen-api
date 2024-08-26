@@ -1,1 +1,1 @@
-export { LoginRequest } from "./login.request";
+export { LoginRequestModel } from "./login-request.model";
