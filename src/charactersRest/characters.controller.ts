@@ -3,10 +3,10 @@ import {
   Controller,
   Delete,
   Get,
-  InternalServerErrorException,
   Param,
   Post,
   Query,
+  UseFilters,
   UseGuards,
 } from "@nestjs/common";
 import { CharactersService } from "./characters.service";
@@ -18,8 +18,10 @@ import {
   CharacterOperationModel,
   CharactersResponseModel,
 } from "./models/response";
+import { Neo4jExceptionFilter } from "@dotpen/common/filters";
 
 @Controller("characters")
+@UseFilters(new Neo4jExceptionFilter())
 @UseGuards(AuthGuard)
 export class CharactersController {
   static className = "CharactersController";
@@ -49,13 +51,9 @@ export class CharactersController {
   }
 
   @Post()
-  async createCharacter(
+  createCharacter(
     @Body() characterCreateModel: CharacterCreateModel,
   ): Promise<CharacterOperationModel> {
-    const result = await this.service.createCharacter(characterCreateModel);
-    if (!result.success) {
-      throw new InternalServerErrorException(result);
-    }
-    return result;
+    return this.service.createCharacter(characterCreateModel);
   }
 }

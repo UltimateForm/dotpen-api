@@ -1,4 +1,4 @@
-import { Injectable, NotFoundException } from "@nestjs/common";
+import { Injectable } from "@nestjs/common";
 import { Driver, Session } from "neo4j-driver";
 import {
   CharacterEntity,
@@ -15,6 +15,7 @@ import { generate as generateId } from "short-uuid";
 import { ndx } from "./transactions/nodes";
 import { InjectPinoLogger, PinoLogger } from "nestjs-pino";
 import { rlx } from "./transactions/relationships";
+import { NoMatchException } from "./exceptions";
 
 @Injectable()
 export class CharactersRepositoryService {
@@ -56,7 +57,7 @@ export class CharactersRepositoryService {
     return this.#withSession(async (session) => {
       const read = await session.executeRead(ndx.readSingleCharacterById(id));
       if (!read.records.length) {
-        throw new NotFoundException();
+        throw new NoMatchException();
       }
       const characterNodde = read.records.map((rec) => rec.get("character"))[0];
       return characterNodde.properties;
@@ -69,7 +70,7 @@ export class CharactersRepositoryService {
         ndx.deleteSingleCharacterById(id),
       );
       if (!write.summary.counters.containsUpdates()) {
-        throw new NotFoundException();
+        throw new NoMatchException();
       }
     });
   }
@@ -80,7 +81,7 @@ export class CharactersRepositoryService {
         ndx.updateSingleCharacterById(character),
       );
       if (!write.summary.counters.containsUpdates()) {
-        throw new NotFoundException();
+        throw new NoMatchException();
       }
 
       const updated = write.records.map((rec) => rec.get("character"))[0];
@@ -106,7 +107,7 @@ export class CharactersRepositoryService {
         rlx.putRelation(relationshipData),
       );
       if (!write.records.length) {
-        throw new NotFoundException();
+        throw new NoMatchException();
       }
       const record = write.records[0];
       const entity = new CharacterRelationEntity();
@@ -133,7 +134,7 @@ export class CharactersRepositoryService {
         rlx.deleteRelation(relationFindInput),
       );
       if (!write.summary.counters.containsUpdates()) {
-        throw new NotFoundException();
+        throw new NoMatchException();
       }
     });
   }

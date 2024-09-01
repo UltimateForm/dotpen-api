@@ -7,7 +7,7 @@ import {
 import { InjectPinoLogger, PinoLogger } from "nestjs-pino";
 import { CharacterModel, CharactersResponseModel } from "./models/response";
 import { CharacterCreateModel, PaginationRequestModel } from "./models/request";
-import { HttpException, Injectable } from "@nestjs/common";
+import { Injectable } from "@nestjs/common";
 import { CharacterOperationModel } from "./models/response/character-operation.model";
 
 @Injectable()
@@ -53,27 +53,19 @@ export class CharactersService {
 
   async createCharacter(characterPayload: CharacterCreateModel) {
     const operationResult = new CharacterOperationModel();
-    try {
-      const characterEntity = this.automapper.map(
-        characterPayload,
-        CharacterCreateModel,
-        CharacterEntity,
-      );
-      const result = await this.db.createCharacter(characterEntity);
-      const mappedCharacter = this.automapper.map(
-        result,
-        CharacterEntity,
-        CharacterModel,
-      );
-      operationResult.character = mappedCharacter;
-      operationResult.success = true;
-    } catch (error) {
-      if (error instanceof HttpException) {
-        throw error;
-      }
-      console.error(error);
-      operationResult.success = false;
-    }
+    const characterEntity = this.automapper.map(
+      characterPayload,
+      CharacterCreateModel,
+      CharacterEntity,
+    );
+    const result = await this.db.createCharacter(characterEntity);
+    const mappedCharacter = this.automapper.map(
+      result,
+      CharacterEntity,
+      CharacterModel,
+    );
+    operationResult.character = mappedCharacter;
+    operationResult.success = true;
     return operationResult;
   }
 }
