@@ -11,8 +11,16 @@ import { AutomapperModule } from "@automapper/nestjs";
 import { classes } from "@automapper/classes";
 import { AuthRestModule } from "./authRest";
 import { JwtModule } from "@nestjs/jwt";
+import { APP_FILTER } from "@nestjs/core";
+import { Neo4jExceptionFilter } from "./common/filters";
 
 @Module({
+  providers: [
+    {
+      provide: APP_FILTER,
+      useClass: Neo4jExceptionFilter,
+    },
+  ],
   imports: [
     AutomapperModule.forRoot({
       strategyInitializer: classes(),

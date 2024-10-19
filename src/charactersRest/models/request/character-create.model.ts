@@ -1,7 +1,8 @@
 import { AutoMap } from "@automapper/classes";
+import { ICharacter } from "@dotpen/interfaces";
 import { IsNumber, IsPositive, IsString } from "class-validator";
 
-export class CharacterCreateModel {
+export class CharacterCreateModel implements ICharacter {
   @AutoMap()
   @IsString()
   name: string;

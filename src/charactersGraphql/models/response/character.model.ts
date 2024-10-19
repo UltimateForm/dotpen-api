@@ -1,8 +1,9 @@
 import { AutoMap } from "@automapper/classes";
+import { ICharacter } from "@dotpen/interfaces";
 import { Field, Int, ObjectType } from "@nestjs/graphql";
 
 @ObjectType()
-export class CharacterModel {
+export class CharacterModel implements ICharacter {
   @Field()
   @AutoMap()
   id: string;

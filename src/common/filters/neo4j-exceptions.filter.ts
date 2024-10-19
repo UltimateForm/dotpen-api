@@ -9,6 +9,7 @@ import {
 } from "@nestjs/common";
 import { Neo4jError } from "neo4j-driver";
 import { Response } from "express";
+import { InjectPinoLogger, PinoLogger } from "nestjs-pino";
 
 export function getHttpException(neo4jErrorCode: string): HttpException {
   switch (neo4jErrorCode) {
@@ -27,7 +28,15 @@ export function getHttpException(neo4jErrorCode: string): HttpException {
 
 @Catch(Neo4jError)
 export class Neo4jExceptionFilter implements ExceptionFilter {
+  static className = "Neo4jExceptionFilter";
+
+  constructor(
+    @InjectPinoLogger(Neo4jExceptionFilter.className)
+    private readonly logger: PinoLogger,
+  ) {}
+
   catch(exception: Neo4jError, host: ArgumentsHost) {
+    this.logger.error(exception);
     const ctx = host.switchToHttp();
     const response = ctx.getResponse<Response>();
     const mappedException = getHttpException(exception.code);

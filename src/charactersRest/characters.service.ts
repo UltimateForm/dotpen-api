@@ -68,4 +68,30 @@ export class CharactersService {
     operationResult.success = true;
     return operationResult;
   }
+
+  async updateCharacterById(
+    id: string,
+    characterPayload: CharacterCreateModel,
+  ): Promise<CharacterOperationModel> {
+    const operationResult = new CharacterOperationModel();
+    const characterEntity = this.automapper.map(
+      characterPayload,
+      CharacterCreateModel,
+      CharacterEntity,
+      {
+        afterMap: (_, destination) => {
+          destination.id = id;
+        },
+      },
+    );
+    const update = await this.db.updateCharacterById(characterEntity);
+    const updatedModel = this.automapper.map(
+      update,
+      CharacterEntity,
+      CharacterModel,
+    );
+    operationResult.success = true;
+    operationResult.character = updatedModel;
+    return operationResult;
+  }
 }
