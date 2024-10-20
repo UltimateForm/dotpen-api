@@ -20,7 +20,7 @@ async function bootstrap() {
   SwaggerModule.setup("/", app, document, {
     jsonDocumentUrl: "swagger.json",
   });
-  app.useGlobalPipes(new ValidationPipe());
+  app.useGlobalPipes(new ValidationPipe({ transform: true }));
   registerEnumType(CharacterRelationLevel, {
     name: "CharacterRelationLevel",
   });

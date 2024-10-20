@@ -1,7 +1,9 @@
 import { ArgsType, Field } from "@nestjs/graphql";
-import { CharacterRelationType } from "../character-relation-type";
 import { AutoMap } from "@automapper/classes";
-import { CharacterRelationLevel } from "../character-relation-level";
+import {
+  CharacterRelationLevel,
+  CharacterRelationType,
+} from "@dotpen/common/models";
 
 @ArgsType()
 export class CharacterPutRelationArgs {

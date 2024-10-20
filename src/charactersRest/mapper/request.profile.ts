@@ -1,8 +1,14 @@
 import { AutomapperProfile, InjectMapper } from "@automapper/nestjs";
 import { Injectable } from "@nestjs/common";
-import { createMap, type Mapper } from "@automapper/core";
-import { CharacterEntity } from "@dotpen/charactersRepository";
-import { CharacterCreateModel } from "../models/request";
+import { createMap, forMember, mapFrom, type Mapper } from "@automapper/core";
+import {
+  CharacterEntity,
+  CharacterRelationFindInput,
+} from "@dotpen/charactersRepository";
+import {
+  CharacterCreateModel,
+  CharacterRelationsRequestModel,
+} from "../models/request";
 
 @Injectable()
 export class RequestProfile extends AutomapperProfile {
@@ -13,6 +19,27 @@ export class RequestProfile extends AutomapperProfile {
   override get profile() {
     return (mapper) => {
       createMap(mapper, CharacterCreateModel, CharacterEntity);
+      createMap(
+        mapper,
+        CharacterRelationsRequestModel,
+        CharacterRelationFindInput,
+        forMember(
+          (target) => target.idx,
+          mapFrom((source) => source.ids?.[0]),
+        ),
+        forMember(
+          (target) => target.idy,
+          mapFrom((source) => source.ids?.[1]),
+        ),
+        forMember(
+          (target) => target.skip,
+          mapFrom((source) => source.pageNo * source.pageSize),
+        ),
+        forMember(
+          (target) => target.limit,
+          mapFrom((source) => source.pageSize),
+        ),
+      );
     };
   }
 }

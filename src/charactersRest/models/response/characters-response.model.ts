@@ -1,4 +1,4 @@
-import { IPaginationResult } from "@dotpen/interfaces";
+import { IPaginationResult } from "@dotpen/common/interfaces";
 import { CharacterModel } from "./character.model";
 
 export class CharactersResponseModel implements IPaginationResult {

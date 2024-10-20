@@ -1,7 +1,7 @@
 import { AutoMap } from "@automapper/classes";
 import { ArgsType, Field } from "@nestjs/graphql";
-import { CharacterRelationType } from "../character-relation-type";
 import { PaginationArgs } from "./pagination.args";
+import { CharacterRelationType } from "@dotpen/common/models";
 
 @ArgsType()
 export class CharacterRelationFindArgs extends PaginationArgs {

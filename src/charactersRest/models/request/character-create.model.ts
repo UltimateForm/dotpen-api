@@ -1,5 +1,5 @@
 import { AutoMap } from "@automapper/classes";
-import { ICharacter } from "@dotpen/interfaces";
+import { ICharacter } from "@dotpen/common/interfaces";
 import { IsNumber, IsPositive, IsString } from "class-validator";
 
 export class CharacterCreateModel implements ICharacter {

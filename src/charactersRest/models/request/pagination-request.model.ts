@@ -1,4 +1,4 @@
-import { IPagination } from "@dotpen/interfaces";
+import { IPagination } from "@dotpen/common/interfaces";
 import { IsOptional } from "class-validator";
 
 export class PaginationRequestModel implements IPagination {
