@@ -4,9 +4,11 @@ import { createMap, forMember, mapFrom, type Mapper } from "@automapper/core";
 import {
   CharacterEntity,
   CharacterRelationFindInput,
+  CharacterRelationInput,
 } from "@dotpen/charactersRepository";
 import {
   CharacterCreateModel,
+  CharacterRelationPutModel,
   CharacterRelationsRequestModel,
 } from "../models/request";
 
@@ -19,6 +21,19 @@ export class RequestProfile extends AutomapperProfile {
   override get profile() {
     return (mapper) => {
       createMap(mapper, CharacterCreateModel, CharacterEntity);
+      createMap(
+        mapper,
+        CharacterRelationPutModel,
+        CharacterRelationInput,
+        forMember(
+          (target) => target.idx,
+          mapFrom((source) => source.ids[0]),
+        ),
+        forMember(
+          (target) => target.idy,
+          mapFrom((source) => source.ids[1]),
+        ),
+      );
       createMap(
         mapper,
         CharacterRelationsRequestModel,

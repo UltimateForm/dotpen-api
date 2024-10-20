@@ -2,15 +2,20 @@ import { InjectMapper } from "@automapper/nestjs";
 import {
   CharacterRelationEntity,
   CharacterRelationFindInput,
+  CharacterRelationInput,
   CharactersRepositoryService,
 } from "@dotpen/charactersRepository";
 import { Injectable } from "@nestjs/common";
 import { InjectPinoLogger, PinoLogger } from "nestjs-pino";
 import { CharactersService } from "./characters.service";
 import { Mapper } from "@automapper/core";
-import { CharacterRelationsRequestModel } from "./models/request";
+import {
+  CharacterRelationPutModel,
+  CharacterRelationsRequestModel,
+} from "./models/request";
 import {
   CharacterRelationModel,
+  CharacterRelationOperationModel,
   CharacterRelationsResponseModel,
 } from "./models/response";
 
@@ -51,5 +56,25 @@ export class RelationsService {
     responseModel.pageSize = requestModel.pageSize;
     responseModel.relations = relationsList;
     return responseModel;
+  }
+
+  async putCharacterRelation(
+    relation: CharacterRelationPutModel,
+  ): Promise<CharacterRelationOperationModel> {
+    const operationModel = new CharacterRelationOperationModel();
+    const mappedInput = this.automapper.map(
+      relation,
+      CharacterRelationPutModel,
+      CharacterRelationInput,
+    );
+    const dbResp = await this.db.putRelation(mappedInput);
+    const mappedResponse = this.automapper.map(
+      dbResp,
+      CharacterRelationEntity,
+      CharacterRelationModel,
+    );
+    operationModel.success = true;
+    operationModel.characterRelation = mappedResponse;
+    return operationModel;
   }
 }
